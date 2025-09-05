@@ -26,7 +26,10 @@ export default async function RootLayout({
     <html lang={lang}>
       <body>
         <NextIntlClientProvider>
-          <ClientThemeProvider>{children}</ClientThemeProvider>
+          <ClientThemeProvider>
+            <h1>Using a root layout</h1>
+            {children}
+          </ClientThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>
