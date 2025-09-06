@@ -4,6 +4,9 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import ClientThemeProvider from '@/components/common/theme-provider';
 import { routing } from '@/i18n/routing';
 import { notFound, redirect } from 'next/navigation';
+import NavBar from '@/components/main-page/NavBar';
+import FooterElement from '@/components/main-page/FooterElement';
+import { Box } from '@mui/material';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -25,12 +28,32 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <body>
-        <NextIntlClientProvider>
-          <ClientThemeProvider>
-            <h1>Using a root layout</h1>
-            {children}
-          </ClientThemeProvider>
-        </NextIntlClientProvider>
+        <ClientThemeProvider>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              minHeight: '100vh',
+            }}
+          >
+            <header>
+              <NavBar />
+            </header>
+            <Box
+              component="main"
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <NextIntlClientProvider>{children}</NextIntlClientProvider>
+            </Box>
+            <footer>
+              <FooterElement />
+            </footer>
+          </Box>
+        </ClientThemeProvider>
       </body>
     </html>
   );
