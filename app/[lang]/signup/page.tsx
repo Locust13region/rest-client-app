@@ -1,10 +1,10 @@
-import * as React from 'react';
+'use client';
+
+// import * as React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -13,8 +13,9 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import AppTheme from '../shared-theme/AppTheme';
-import ColorModeSelect from '../shared-theme/ColorModeSelect';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '@/app/firebase/config';
+import z from 'zod';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -58,72 +59,82 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+export const formSchema = z.object({
+  email: z.email({ error: 'Enter valid email' }),
+  password: z
+    .string()
+    .min(8, { error: 'Must be at least 8 characters' })
+    .refine((value) => /[a-z]/.test(value), {
+      error: 'Add one lowercase',
+    })
+    .refine((value) => /[A-Z]/.test(value), {
+      error: 'Add one uppercase',
+    })
+    .refine((value) => /\d/.test(value), {
+      error: 'Add one number',
+    })
+    .refine((value) => /[!@#$%^&*+-]/.test(value), {
+      error: 'Add one special character ',
+    }),
+});
+type FormData = z.infer<typeof formSchema>;
+
+const initialFormState = {
+  email: '',
+  password: '',
+};
+
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [userFormData, setFormData] = useState<Partial<FormData>>({
+    email: '',
+    password: '',
+  });
+  const [showErrors, setShowErrors] = useState(false);
 
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
+  const [createUser] = useCreateUserWithEmailAndPassword(auth);
 
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
-    return isValid;
+  const formData = {
+    ...initialFormState,
+    ...userFormData,
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
+  const validate = () => {
+    const res = formSchema.safeParse(formData);
+    if (res.success) {
+      setShowErrors(false);
+      return undefined;
+    }
+    return z.flattenError(res.error);
+  };
+
+  const reset = () => setFormData(initialFormState);
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const errors = validate();
+
+    if (errors || !userFormData.email || !userFormData.password) {
+      setShowErrors(true);
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    try {
+      const response = await createUser(
+        userFormData.email,
+        userFormData.password
+      );
+      reset();
+      console.log({ response });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const errors = showErrors ? validate() : undefined;
+
   return (
-    // <AppTheme {...props}>
-    //   <CssBaseline enableColorScheme />
-    //   <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
     <SignUpContainer direction="column" justifyContent="space-between">
       <Card variant="outlined">
-        {/* <SitemarkIcon /> */}
         <Typography
           component="h1"
           variant="h4"
@@ -137,38 +148,28 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
           <FormControl>
-            <FormLabel htmlFor="name">Full name</FormLabel>
-            <TextField
-              autoComplete="name"
-              name="name"
-              required
-              fullWidth
-              id="name"
-              placeholder="Jon Snow"
-              error={nameError}
-              helperText={nameErrorMessage}
-              color={nameError ? 'error' : 'primary'}
-            />
-          </FormControl>
-          <FormControl>
             <FormLabel htmlFor="email">Email</FormLabel>
             <TextField
-              required
               fullWidth
               id="email"
               placeholder="your@email.com"
               name="email"
               autoComplete="email"
               variant="outlined"
-              error={emailError}
-              helperText={emailErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
+              value={userFormData.email}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, email: e.target.value }))
+              }
+              error={errors?.fieldErrors.email?.length ? true : false}
+              helperText={errors?.fieldErrors.email?.join(', ')}
+              color={
+                (errors?.fieldErrors.email?.length ?? 0) ? 'error' : 'primary'
+              }
             />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
-              required
               fullWidth
               name="password"
               placeholder="••••••"
@@ -176,20 +177,24 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               id="password"
               autoComplete="new-password"
               variant="outlined"
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
+              value={userFormData.password}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, password: e.target.value }))
+              }
+              error={errors?.fieldErrors.password?.length ? true : false}
+              helperText={errors?.fieldErrors.password?.join(',')}
+              color={
+                (errors?.fieldErrors.password?.length ?? 0)
+                  ? 'error'
+                  : 'primary'
+              }
             />
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="allowExtraEmails" color="primary" />}
-            label="I want to receive updates via email."
-          />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            onClick={validateInputs}
+            disabled={!!errors}
           >
             Sign up
           </Button>
@@ -211,6 +216,5 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
         </Box>
       </Card>
     </SignUpContainer>
-    // </AppTheme>
   );
 }
