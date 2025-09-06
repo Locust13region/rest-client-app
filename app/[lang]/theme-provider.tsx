@@ -1,5 +1,5 @@
 'use client';
-
+import React from 'react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import theme from '@/theme';
