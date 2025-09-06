@@ -1,9 +1,10 @@
 'use client';
-import React from 'react';
+
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import theme from '@/theme';
 import { Roboto } from 'next/font/google';
+import React from 'react';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
