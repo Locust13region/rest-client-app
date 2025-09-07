@@ -29,7 +29,8 @@ export default function SignUp() {
   const formSchema = useFormSchema();
   const t = useTranslations('Sign');
 
-  const [createUser] = useCreateUserWithEmailAndPassword(auth);
+  const [createUser, , , createUserError] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const router = useRouter();
 
@@ -44,12 +45,12 @@ export default function SignUp() {
       setShowErrors(false);
       return undefined;
     }
-    return z.flattenError(res.error);
+    return z.flattenError(res.error).fieldErrors;
   };
 
   const reset = () => setFormData(initialFormState);
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const errors = validate();
@@ -58,18 +59,14 @@ export default function SignUp() {
       setShowErrors(true);
       return;
     }
-    try {
-      const response = await createUser(
-        userFormData.email,
-        userFormData.password
-      );
-      console.log({ response });
-      reset();
-      router.push('/');
-    } catch (error) {
-      console.log(error);
-    }
+    createUser(userFormData.email, userFormData.password);
+    reset();
+    router.push('/');
   };
+
+  if (createUserError) {
+    console.log(createUserError?.message);
+  }
 
   const errors = showErrors ? validate() : undefined;
 
@@ -101,11 +98,9 @@ export default function SignUp() {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, email: e.target.value }))
               }
-              error={errors?.fieldErrors.email?.length ? true : false}
-              helperText={errors?.fieldErrors.email?.join(', ')}
-              color={
-                (errors?.fieldErrors.email?.length ?? 0) ? 'error' : 'primary'
-              }
+              error={errors?.email?.length ? true : false}
+              helperText={errors?.email?.join(', ')}
+              color={(errors?.email?.length ?? 0) ? 'error' : 'primary'}
             />
           </FormControl>
           <FormControl>
@@ -122,13 +117,9 @@ export default function SignUp() {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, password: e.target.value }))
               }
-              error={errors?.fieldErrors.password?.length ? true : false}
-              helperText={errors?.fieldErrors.password?.join(', ')}
-              color={
-                (errors?.fieldErrors.password?.length ?? 0)
-                  ? 'error'
-                  : 'primary'
-              }
+              error={errors?.password?.length ? true : false}
+              helperText={errors?.password?.join(', ')}
+              color={(errors?.password?.length ?? 0) ? 'error' : 'primary'}
             />
           </FormControl>
           <Button

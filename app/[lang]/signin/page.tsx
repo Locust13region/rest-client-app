@@ -25,7 +25,7 @@ export default function SignIn() {
   const [userFormData, setFormData] = useState(initialFormState);
   const t = useTranslations('Sign');
 
-  const [signInUser] = useSignInWithEmailAndPassword(auth);
+  const [signInUser, , , signInUserError] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
 
   const reset = () => setFormData(initialFormState);
@@ -36,18 +36,14 @@ export default function SignIn() {
     if (!userFormData.email || !userFormData.password) {
       return;
     }
-    try {
-      const response = await signInUser(
-        userFormData.email,
-        userFormData.password
-      );
-      console.log({ response });
-      reset();
-      router.push('/');
-    } catch (error) {
-      console.log(error);
-    }
+    signInUser(userFormData.email, userFormData.password);
+    reset();
+    router.push('/');
   };
+
+  if (signInUserError) {
+    console.log(signInUserError.message);
+  }
 
   return (
     <SignContainer direction="column" justifyContent="space-between">
