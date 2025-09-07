@@ -29,7 +29,7 @@ export default function SignUp() {
   const formSchema = useFormSchema();
   const t = useTranslations('Sign');
 
-  // const [createUser] = useCreateUserWithEmailAndPassword(auth);
+  const [createUser] = useCreateUserWithEmailAndPassword(auth);
 
   const router = useRouter();
 
@@ -58,17 +58,17 @@ export default function SignUp() {
       setShowErrors(true);
       return;
     }
-    // try {
-    //   const response = await createUser(
-    //     userFormData.email,
-    //     userFormData.password
-    //   );
-    //   console.log({ response });
-    //   reset();
-    //   router.push('/');
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const response = await createUser(
+        userFormData.email,
+        userFormData.password
+      );
+      console.log({ response });
+      reset();
+      router.push('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const errors = showErrors ? validate() : undefined;
@@ -81,7 +81,7 @@ export default function SignUp() {
           variant="h4"
           sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
         >
-          {t('title')}
+          {t('signUp')}
         </Typography>
         <Box
           component="form"
@@ -137,7 +137,7 @@ export default function SignUp() {
             variant="contained"
             disabled={!!errors}
           >
-            {t('actionSignUp')}
+            {t('signUp')}
           </Button>
         </Box>
         <Divider>
@@ -152,7 +152,7 @@ export default function SignUp() {
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >
-                {t('actionSignIn')}
+                {t('signIn')}
               </MuiLink>
             </Link>
           </Typography>
