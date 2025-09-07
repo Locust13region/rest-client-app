@@ -1,21 +1,27 @@
 import z from 'zod';
+import { useTranslations } from 'next-intl';
 
-export const formSchema = z.object({
-  email: z.email({ error: 'Enter valid email' }),
-  password: z
-    .string()
-    .min(8, { error: 'Must be at least 8 characters' })
-    .refine((value) => /[a-z]/.test(value), {
-      error: 'Add one lowercase',
-    })
-    .refine((value) => /[A-Z]/.test(value), {
-      error: 'Add one uppercase',
-    })
-    .refine((value) => /\d/.test(value), {
-      error: 'Add one number',
-    })
-    .refine((value) => /[!@#$%^&*+-]/.test(value), {
-      error: 'Add one special character ',
-    }),
-});
-export type FormData = z.infer<typeof formSchema>;
+export function useFormSchema() {
+  const t = useTranslations('Sign');
+
+  return z.object({
+    email: z.email({ error: t('emailTypeError') }),
+    password: z
+      .string()
+      .min(8, { error: t('passwordLengthError') })
+      .refine((value) => /\p{Ll}/u.test(value), {
+        error: t('passwordLowercaseError'),
+      })
+      .refine((value) => /\p{Lu}/u.test(value), {
+        error: t('passwordUppercaseError'),
+      })
+      .refine((value) => /[0-9]/.test(value), {
+        error: t('passwordNumberError'),
+      })
+      .refine((value) => /[^\p{L}\p{N}]/u.test(value), {
+        error: t('passwordSpecialError'),
+      }),
+  });
+}
+
+export type FormData = z.infer<ReturnType<typeof useFormSchema>>;

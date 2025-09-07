@@ -1,35 +1,35 @@
 'use client';
 
-// import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '@/app/firebase/config';
-import { Card, SignUpContainer } from './styled';
+import { Card, SignContainer } from '@/style/styledSign';
 import z from 'zod';
-import { formSchema, type FormData } from './types';
+import { useFormSchema, type FormData } from './types';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import MuiLink from '@mui/material/Link';
+import { Link } from '@/i18n/navigation';
 
 const initialFormState = {
   email: '',
   password: '',
 };
 
-export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [userFormData, setFormData] = useState<FormData>({
-    email: '',
-    password: '',
-  });
+export default function SignUp() {
+  const [userFormData, setFormData] = useState<FormData>(initialFormState);
   const [showErrors, setShowErrors] = useState(false);
+  const formSchema = useFormSchema();
+  const t = useTranslations('Sign');
 
-  const [createUser] = useCreateUserWithEmailAndPassword(auth);
+  // const [createUser] = useCreateUserWithEmailAndPassword(auth);
 
   const router = useRouter();
 
@@ -58,30 +58,30 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setShowErrors(true);
       return;
     }
-    try {
-      const response = await createUser(
-        userFormData.email,
-        userFormData.password
-      );
-      console.log({ response });
-      reset();
-      router.push('/');
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await createUser(
+    //     userFormData.email,
+    //     userFormData.password
+    //   );
+    //   console.log({ response });
+    //   reset();
+    //   router.push('/');
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const errors = showErrors ? validate() : undefined;
 
   return (
-    <SignUpContainer direction="column" justifyContent="space-between">
+    <SignContainer direction="column" justifyContent="space-between">
       <Card variant="outlined">
         <Typography
           component="h1"
           variant="h4"
           sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
         >
-          Sign up
+          {t('title')}
         </Typography>
         <Box
           component="form"
@@ -89,7 +89,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
           <FormControl>
-            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormLabel htmlFor="email">{t('email')} </FormLabel>
             <TextField
               fullWidth
               id="email"
@@ -109,7 +109,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="password">Password</FormLabel>
+            <FormLabel htmlFor="password">{t('password')} </FormLabel>
             <TextField
               fullWidth
               name="password"
@@ -123,7 +123,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 setFormData((prev) => ({ ...prev, password: e.target.value }))
               }
               error={errors?.fieldErrors.password?.length ? true : false}
-              helperText={errors?.fieldErrors.password?.join(',')}
+              helperText={errors?.fieldErrors.password?.join(', ')}
               color={
                 (errors?.fieldErrors.password?.length ?? 0)
                   ? 'error'
@@ -137,25 +137,27 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             variant="contained"
             disabled={!!errors}
           >
-            Sign up
+            {t('actionSignUp')}
           </Button>
         </Box>
         <Divider>
-          <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>{t('or')} </Typography>
         </Divider>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography sx={{ textAlign: 'center' }}>
-            Already have an account?{' '}
-            <Link
-              href="/material-ui/getting-started/templates/sign-in/"
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Sign in
+            {t('alreadyHave')}{' '}
+            <Link href="/sign-in" passHref>
+              <MuiLink
+                component="span"
+                variant="body2"
+                sx={{ alignSelf: 'center' }}
+              >
+                {t('actionSignIn')}
+              </MuiLink>
             </Link>
           </Typography>
         </Box>
       </Card>
-    </SignUpContainer>
+    </SignContainer>
   );
 }
