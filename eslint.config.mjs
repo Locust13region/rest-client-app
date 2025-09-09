@@ -5,8 +5,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-plugin-prettier';
 import nextPlugin from '@next/eslint-plugin-next';
 import tsParser from '@typescript-eslint/parser';
-import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
@@ -14,6 +14,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  js.configs.recommended,
   {
     ignores: ['node_modules/**', '.next/**', 'dist/**'],
   },
@@ -23,7 +24,7 @@ const eslintConfig = [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        ecmaVersion: 2020,
+        ecmaVersion: 2023,
         sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
@@ -61,9 +62,9 @@ const eslintConfig = [
       },
     },
   },
-  // ...compat.config({
-  //   extends: ['eslint:recommended'],
-  // }),
+  ...compat.config({
+    extends: ['eslint:recommended', 'next'],
+  }),
 ];
 
 export default eslintConfig;
