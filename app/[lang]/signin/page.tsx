@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -9,41 +9,52 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '@/app/firebase/config';
+import { auth } from '@/firebase/config';
 import { Card, SignContainer } from '@/style/styledSign';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import MuiLink from '@mui/material/Link';
 import { Link } from '@/i18n/navigation';
-
-const initialFormState = {
-  email: '',
-  password: '',
-};
+import SignForm from '@/components/sign-form/sign-form';
 
 export default function SignIn() {
-  const [userFormData, setFormData] = useState(initialFormState);
   const t = useTranslations('Sign');
 
-  const [signInUser, , , signInUserError] = useSignInWithEmailAndPassword(auth);
+  const [signInUser, result, loading, signInUserError] =
+    useSignInWithEmailAndPassword(auth);
   const router = useRouter();
 
-  const reset = () => setFormData(initialFormState);
-
-  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!userFormData.email || !userFormData.password) {
+    const data = new FormData(e.currentTarget);
+    const email = data.get('email');
+    const password = data.get('password');
+
+    if (
+      !email ||
+      typeof email !== 'string' ||
+      !password ||
+      typeof password !== 'string'
+    ) {
       return;
     }
-    signInUser(userFormData.email, userFormData.password);
-    reset();
-    router.push('/');
+
+    signInUser(email, password);
   };
 
-  if (signInUserError) {
-    console.log(signInUserError.message);
-  }
+  useEffect(() => {
+    if (!loading && result) {
+      console.log('Signed in:', result.user);
+      router.push('/');
+    }
+  }, [loading, result, router]);
+
+  useEffect(() => {
+    if (!loading && signInUserError) {
+      console.log('Signed in:', signInUserError.message);
+    }
+  }, [loading, signInUserError]);
 
   return (
     <SignContainer direction="column" justifyContent="space-between">
@@ -55,11 +66,7 @@ export default function SignIn() {
         >
           {t('signIn')}
         </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
+        <SignForm handleSubmit={handleSubmit}>
           <FormControl>
             <FormLabel htmlFor="email">{t('email')} </FormLabel>
             <TextField
@@ -71,10 +78,6 @@ export default function SignIn() {
               id="email"
               autoComplete="email"
               variant="outlined"
-              value={userFormData.email}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, email: e.target.value }))
-              }
             />
           </FormControl>
           <FormControl>
@@ -88,23 +91,19 @@ export default function SignIn() {
               id="password"
               autoComplete="new-password"
               variant="outlined"
-              value={userFormData.password}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, password: e.target.value }))
-              }
             />
           </FormControl>
           <Button type="submit" fullWidth variant="contained">
             {t('signIn')}
           </Button>
-        </Box>
+        </SignForm>
         <Divider>
           <Typography sx={{ color: 'text.secondary' }}>{t('or')} </Typography>
         </Divider>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography sx={{ textAlign: 'center' }}>
             {t('alreadyHave')}{' '}
-            <Link href="/sign-in" passHref>
+            <Link href="/signup">
               <MuiLink
                 component="span"
                 variant="body2"

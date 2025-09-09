@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -9,7 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import { auth } from '@/app/firebase/config';
+import { auth } from '@/firebase/config';
 import { Card, SignContainer } from '@/style/styledSign';
 import z from 'zod';
 import { useFormSchema, type FormData } from './types';
@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import MuiLink from '@mui/material/Link';
 import { Link } from '@/i18n/navigation';
+import SignForm from '@/components/sign-form/sign-form';
 
 const initialFormState = {
   email: '',
@@ -29,7 +30,7 @@ export default function SignUp() {
   const formSchema = useFormSchema();
   const t = useTranslations('Sign');
 
-  const [createUser, , , createUserError] =
+  const [createUser, result, loading, createUserError] =
     useCreateUserWithEmailAndPassword(auth);
 
   const router = useRouter();
@@ -50,7 +51,7 @@ export default function SignUp() {
 
   const reset = () => setFormData(initialFormState);
 
-  const handleSubmit = (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const errors = validate();
@@ -60,13 +61,21 @@ export default function SignUp() {
       return;
     }
     createUser(userFormData.email, userFormData.password);
-    reset();
-    router.push('/');
   };
 
-  if (createUserError) {
-    console.log(createUserError?.message);
-  }
+  useEffect(() => {
+    if (!loading && result) {
+      console.log('Signed up:', result.user);
+      reset();
+      router.push('/');
+    }
+  }, [loading, result, router]);
+
+  useEffect(() => {
+    if (!loading && createUserError) {
+      console.log('Signed up:', createUserError.message);
+    }
+  }, [createUserError, loading]);
 
   const errors = showErrors ? validate() : undefined;
 
@@ -80,11 +89,7 @@ export default function SignUp() {
         >
           {t('signUp')}
         </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
+        <SignForm handleSubmit={handleSubmit}>
           <FormControl>
             <FormLabel htmlFor="email">{t('email')} </FormLabel>
             <TextField
@@ -130,14 +135,14 @@ export default function SignUp() {
           >
             {t('signUp')}
           </Button>
-        </Box>
+        </SignForm>
         <Divider>
           <Typography sx={{ color: 'text.secondary' }}>{t('or')} </Typography>
         </Divider>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography sx={{ textAlign: 'center' }}>
             {t('alreadyHave')}{' '}
-            <Link href="/sign-in" passHref>
+            <Link href="/signin">
               <MuiLink
                 component="span"
                 variant="body2"

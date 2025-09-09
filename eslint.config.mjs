@@ -29,7 +29,10 @@ const eslintConfig = [
           jsx: true,
         },
       },
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
     },
     plugins: {
       react,
@@ -39,6 +42,7 @@ const eslintConfig = [
       '@next/next': nextPlugin,
     },
     rules: {
+      ...js.configs.recommended.rules,
       'prettier/prettier': ['error', { singleQuote: true, semi: true }],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       'react/react-in-jsx-scope': 'off',
@@ -57,9 +61,9 @@ const eslintConfig = [
       },
     },
   },
-  ...compat.config({
-    extends: ['eslint:recommended', 'next'],
-  }),
+  // ...compat.config({
+  //   extends: ['eslint:recommended'],
+  // }),
 ];
 
 export default eslintConfig;
