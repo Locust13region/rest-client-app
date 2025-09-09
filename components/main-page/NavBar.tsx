@@ -15,14 +15,14 @@ import MenuItem from '@mui/material/MenuItem';
 
 const pages = [
   { label: 'Вход', path: '/login' },
-  { label: 'Регистрация', path: '/SignUp' },
+  { label: 'Регистрация', path: '/signup' },
 ];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const [lang, setLang] = React.useState<'ru' | 'en'>('ru');
+  const [lang, setLang] = React.useState<'ru' | 'en'>('en');
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -36,8 +36,30 @@ function NavBar() {
     // возможно добавление логики переключения языка
   };
 
+  interface ILanguageButton {
+    languageToggle: 'ru' | 'en';
+    languageName: 'RU' | 'EN';
+  }
+
+  function LanguageButton({ languageToggle, languageName }: ILanguageButton) {
+    return (
+      <Button
+        variant={lang === languageToggle ? 'contained' : 'text'}
+        color="inherit"
+        onClick={() => toggleLang(languageToggle)}
+        sx={{ color: lang === languageToggle ? 'white' : 'gray' }}
+      >
+        {languageName}
+      </Button>
+    );
+  }
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#3b3e41ff' }}>
+    <AppBar
+      component="header"
+      position="sticky"
+      sx={{ backgroundColor: '#3b3e41ff' }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link href="/" style={{ display: 'inline-flex' }}>
@@ -63,22 +85,8 @@ function NavBar() {
               gap: 1,
             }}
           >
-            <Button
-              variant={lang === 'ru' ? 'contained' : 'text'}
-              color="inherit"
-              onClick={() => toggleLang('ru')}
-              sx={{ color: lang === 'ru' ? 'white' : 'gray' }}
-            >
-              RU
-            </Button>
-            <Button
-              variant={lang === 'en' ? 'contained' : 'text'}
-              color="inherit"
-              onClick={() => toggleLang('en')}
-              sx={{ color: lang === 'en' ? 'white' : 'gray' }}
-            >
-              EN
-            </Button>
+            <LanguageButton languageToggle={'ru'} languageName={'RU'} />
+            <LanguageButton languageToggle={'en'} languageName={'EN'} />
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -147,30 +155,8 @@ function NavBar() {
               mr: 2,
             }}
           >
-            <Button
-              variant={lang === 'ru' ? 'contained' : 'text'}
-              color="inherit"
-              onClick={() => toggleLang('ru')}
-              sx={{
-                color: lang === 'ru' ? 'white' : 'gray',
-                minWidth: '30px',
-                padding: '4px 8px',
-              }}
-            >
-              RU
-            </Button>
-            <Button
-              variant={lang === 'en' ? 'contained' : 'text'}
-              color="inherit"
-              onClick={() => toggleLang('en')}
-              sx={{
-                color: lang === 'en' ? 'white' : 'gray',
-                minWidth: '30px',
-                padding: '4px 8px',
-              }}
-            >
-              EN
-            </Button>
+            <LanguageButton languageToggle={'ru'} languageName={'RU'} />
+            <LanguageButton languageToggle={'en'} languageName={'EN'} />
           </Box>
 
           <Box

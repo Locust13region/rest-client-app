@@ -4,7 +4,7 @@ import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import ClientThemeProvider from '@/components/common/theme-provider';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
-import * as React from 'react';
+import { ReactNode } from 'react';
 import NavBar from '@/components/main-page/NavBar';
 import FooterElement from '@/components/main-page/FooterElement';
 import { Box } from '@mui/material';
@@ -18,7 +18,7 @@ export default async function RootLayout({
   children,
   params,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: Promise<{ lang: string }>;
 }>) {
   const { lang } = await params;
@@ -37,9 +37,9 @@ export default async function RootLayout({
               minHeight: '100vh',
             }}
           >
-            <header>
+            <NextIntlClientProvider>
               <NavBar />
-            </header>
+            </NextIntlClientProvider>
             <Box
               component="main"
               sx={{
@@ -50,9 +50,9 @@ export default async function RootLayout({
             >
               <NextIntlClientProvider>{children}</NextIntlClientProvider>
             </Box>
-            <footer>
+            <NextIntlClientProvider>
               <FooterElement />
-            </footer>
+            </NextIntlClientProvider>
           </Box>
         </ClientThemeProvider>
       </body>

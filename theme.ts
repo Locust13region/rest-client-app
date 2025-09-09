@@ -13,13 +13,12 @@ const theme = createTheme({
       main: '#dda836ff',
     },
     background: {
-      default: '#121212',
+      default: '#292727ff',
       paper: '#1e1e1e',
     },
   },
+
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial"',
-    fontWeightBold: 700,
     fontSize: 14,
   },
   cssVariables: true,
@@ -27,32 +26,8 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          fontFamily: '"Roboto", "Helvetica", "Arial"',
-          fontWeight: 700,
           fontSize: '1rem',
-          letterSpacing: '0.2rem',
           textTransform: 'none',
-        },
-      },
-    },
-    MuiMenuItem: {
-      styleOverrides: {
-        root: {
-          fontFamily: '"Roboto", "Helvetica", "Arial"',
-          fontWeight: 700,
-          fontSize: '1rem',
-          letterSpacing: '0.3rem',
-          textAlign: 'center',
-        },
-      },
-    },
-    MuiTypography: {
-      styleOverrides: {
-        root: {
-          fontFamily: '"Roboto", "Helvetica", "Arial"',
-          fontWeight: 700,
-          fontSize: '1rem',
-          letterSpacing: '0.3rem',
         },
       },
     },
