@@ -1,6 +1,6 @@
 import RequestEditor from '@/components/rest-client/RequestEditor';
 
-function RestClient() {
+async function RestClient() {
   return (
     <div>
       <RequestEditor />

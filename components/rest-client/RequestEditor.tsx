@@ -3,12 +3,14 @@
 import { UrlBox, UrlInput, UrlMenuItem } from '@/style/styledRequestInputs';
 import { httpMethods, httpMethodsValues } from '@/types/restClient';
 import { Box, Button, Tab, Tabs, Toolbar, Typography } from '@mui/material';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import {
   ChangeEvent,
   ReactNode,
   SetStateAction,
   SyntheticEvent,
   useState,
+  FocusEvent,
 } from 'react';
 
 interface TabPanelProps {
@@ -28,8 +30,8 @@ function TabPanel(props: TabPanelProps & RestProps) {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
       {...other}
     >
       {value === index && (
@@ -43,14 +45,44 @@ function TabPanel(props: TabPanelProps & RestProps) {
 
 function a11yProps(index: number) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `tab-${index}`,
+    'aria-controls': `tabpanel-${index}`,
   };
 }
 
+const composeUrl = (path: string, method?: string, url?: string) => {
+  const pageSlug = '/client';
+  const index = path.indexOf(pageSlug);
+  let newPath = path;
+  const encodedUrl = url ? encodeURIComponent(url) : undefined;
+  const vars = [method, encodedUrl];
+
+  if (index !== -1) {
+    const initPath = path.slice(0, index + pageSlug.length) + '/';
+    newPath =
+      vars.reduce((acc, param) => {
+        if (!param) return acc;
+        return acc?.concat(`${param}/`);
+      }, initPath) ?? newPath;
+  }
+  return newPath;
+};
+
 function RequestEditor() {
+  const { slug } = useParams();
+  const router = useRouter();
+  const path = usePathname();
+
+  let initMethod = 'GET';
+  let initUrl = '';
+  if (slug) {
+    initMethod = slug[0].toUpperCase();
+    initUrl = decodeURIComponent(slug[1] ?? '');
+  }
+
   const [currentTab, setCurrentTab] = useState(0);
-  const [method, setMethod] = useState<string>('GET' as httpMethods);
+  const [method, setMethod] = useState<string>(initMethod as httpMethods);
+  const [url, setUrl] = useState<string>(initUrl);
 
   const handleTabChange = (
     event: SyntheticEvent,
@@ -59,8 +91,19 @@ function RequestEditor() {
     event.preventDefault();
     setCurrentTab(newValue);
   };
+
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setMethod(event.target.value);
+    const newSlug = event.target.value;
+    setMethod(newSlug);
+    router.replace(composeUrl(path, newSlug));
+  };
+
+  const handleUrlBlur = (event: FocusEvent<HTMLInputElement>) => {
+    const url = event.target.value;
+    setUrl(url);
+    if (url) {
+      router.replace(composeUrl(path, method, url));
+    }
   };
 
   return (
@@ -91,6 +134,9 @@ function RequestEditor() {
             id="url"
             variant="outlined"
             placeholder="Enter URL"
+            value={url}
+            onBlur={handleUrlBlur}
+            onChange={(e) => setUrl(e.currentTarget.value)}
             sx={{ flexGrow: 2, border: 0 }}
           ></UrlInput>
         </UrlBox>
