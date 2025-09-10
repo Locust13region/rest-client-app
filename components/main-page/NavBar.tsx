@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 
 const pages = [
-  { label: 'Вход', path: '/login' },
+  { label: 'Вход', path: '/signin' },
   { label: 'Регистрация', path: '/signup' },
 ];
 
@@ -57,8 +57,13 @@ function NavBar() {
   return (
     <AppBar
       component="header"
-      position="sticky"
-      sx={{ backgroundColor: '#3b3e41ff' }}
+      position="fixed"
+      sx={{
+        backgroundColor: '#3b3e41ff',
+        top: 0,
+        width: '100%',
+        zIndex: (theme) => theme.zIndex.appBar,
+      }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>

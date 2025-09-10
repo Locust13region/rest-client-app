@@ -34,7 +34,7 @@ function CentralArea() {
         <Button
           variant="contained"
           color="primary"
-          href="/login"
+          href="/signin"
           size="large"
           sx={{
             width: { xs: '100%', sm: 'auto' },

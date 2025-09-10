@@ -30,30 +30,29 @@ export default async function RootLayout({
     <html lang={lang}>
       <body>
         <ClientThemeProvider>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: '100vh',
-            }}
-          >
-            <NextIntlClientProvider>
-              <NavBar />
-            </NextIntlClientProvider>
+          <NextIntlClientProvider>
             <Box
-              component="main"
               sx={{
-                flexGrow: 1,
+                paddingTop: 8,
                 display: 'flex',
                 flexDirection: 'column',
+                minHeight: '100vh',
               }}
             >
-              <NextIntlClientProvider>{children}</NextIntlClientProvider>
-            </Box>
-            <NextIntlClientProvider>
+              <NavBar />
+              <Box
+                component="main"
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                {children}
+              </Box>
               <FooterElement />
-            </NextIntlClientProvider>
-          </Box>
+            </Box>
+          </NextIntlClientProvider>
         </ClientThemeProvider>
       </body>
     </html>
