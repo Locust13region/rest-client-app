@@ -1,29 +1,7 @@
 import React from 'react';
 import NextLink from 'next/link';
 import { Box, Typography, Link, Container } from '@mui/material';
-interface IGithubLinkProps {
-  link: string;
-  name: string;
-}
-
-function GithubLink({ link, name }: IGithubLinkProps) {
-  return (
-    <Link
-      component={NextLink}
-      href={link}
-      target="_blank"
-      rel="noopener noreferrer"
-      sx={{
-        color: 'inherit',
-        textDecoration: 'none',
-        fontSize: { xs: '0.9rem', sm: '1rem' },
-        '&:hover': { textDecoration: 'underline' },
-      }}
-    >
-      {name}
-    </Link>
-  );
-}
+import GithubLink from '../common/github-link';
 
 function FooterElement() {
   return (
