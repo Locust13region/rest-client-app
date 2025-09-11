@@ -13,15 +13,13 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { useTranslations, useLocale } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 
 function NavBar() {
   const t = useTranslations('Home');
   const locale = useLocale();
-  const pathname = usePathname();
   const router = useRouter();
-
-  const [lang, setLang] = React.useState<'ru' | 'en'>(locale as 'ru' | 'en');
+  const pathname = usePathname();
 
   const pages = [
     { label: t('signIn'), path: '/signin' },
@@ -41,12 +39,8 @@ function NavBar() {
   };
 
   const toggleLang = (selectedLang: 'ru' | 'en') => {
-    if (selectedLang === lang) return;
-
-    const newPathname = pathname.replace(/^\/(ru|en)/, '');
-
-    setLang(selectedLang);
-    router.push(`/${selectedLang}${newPathname}`);
+    if (selectedLang === locale) return;
+    router.push(pathname, { locale: selectedLang });
   };
 
   interface ILanguageButton {
@@ -57,10 +51,10 @@ function NavBar() {
   function LanguageButton({ languageToggle, languageName }: ILanguageButton) {
     return (
       <Button
-        variant={lang === languageToggle ? 'contained' : 'text'}
+        variant={locale === languageToggle ? 'contained' : 'text'}
         color="inherit"
         onClick={() => toggleLang(languageToggle)}
-        sx={{ color: lang === languageToggle ? 'white' : 'gray' }}
+        sx={{ color: locale === languageToggle ? 'white' : 'gray' }}
       >
         {languageName}
       </Button>
@@ -139,6 +133,7 @@ function NavBar() {
                   key={label}
                   href={path}
                   style={{ textDecoration: 'none' }}
+                  locale={locale}
                 >
                   <MenuItem onClick={handleCloseNavMenu}>
                     <Typography sx={{ textAlign: 'center' }}>
@@ -181,7 +176,12 @@ function NavBar() {
             sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 3 }}
           >
             {pages.map(({ label, path }) => (
-              <Link key={label} href={path} style={{ textDecoration: 'none' }}>
+              <Link
+                key={label}
+                href={path}
+                style={{ textDecoration: 'none' }}
+                locale={locale}
+              >
                 <Button
                   onClick={handleCloseNavMenu}
                   sx={{
