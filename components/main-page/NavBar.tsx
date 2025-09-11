@@ -12,10 +12,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { usePathname, useRouter } from 'next/navigation';
 
 function NavBar() {
   const t = useTranslations('Home');
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const [lang, setLang] = React.useState<'ru' | 'en'>(locale as 'ru' | 'en');
 
   const pages = [
     { label: t('signIn'), path: '/signin' },
@@ -25,18 +31,22 @@ function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const [lang, setLang] = React.useState<'ru' | 'en'>('en');
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
   const toggleLang = (selectedLang: 'ru' | 'en') => {
+    if (selectedLang === lang) return;
+
+    const newPathname = pathname.replace(/^\/(ru|en)/, '');
+
     setLang(selectedLang);
-    // возможно добавление логики переключения языка
+    router.push(`/${selectedLang}${newPathname}`);
   };
 
   interface ILanguageButton {
