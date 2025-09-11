@@ -104,7 +104,8 @@ const SignForm: FC<SignFormProps> = ({
         </Divider>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography sx={{ textAlign: 'center' }}>
-            {t('alreadyHave')}{' '}
+            {t(formType === 'signUp' ? 'alreadyHave' : "don'tHave")}
+            {'  '}
             <Link href={formType === 'signUp' ? '/signin' : '/signup'}>
               <MuiLink
                 component="span"
