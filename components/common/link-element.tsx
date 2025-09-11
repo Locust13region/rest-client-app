@@ -1,12 +1,12 @@
 import NextLink from 'next/link';
 import { Link } from '@mui/material';
 
-interface IGithubLinkProps {
+interface IGetLink {
   link: string;
   name: string;
 }
 
-function GetLink({ link, name }: IGithubLinkProps) {
+function GetLink({ link, name }: IGetLink) {
   return (
     <Link
       component={NextLink}
