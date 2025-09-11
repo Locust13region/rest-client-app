@@ -6,7 +6,7 @@ interface IGithubLinkProps {
   name: string;
 }
 
-function GithubLink({ link, name }: IGithubLinkProps) {
+function GetLink({ link, name }: IGithubLinkProps) {
   return (
     <Link
       component={NextLink}
@@ -25,4 +25,4 @@ function GithubLink({ link, name }: IGithubLinkProps) {
   );
 }
 
-export default GithubLink;
+export default GetLink;

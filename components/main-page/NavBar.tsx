@@ -12,13 +12,16 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-
-const pages = [
-  { label: 'Вход', path: '/signin' },
-  { label: 'Регистрация', path: '/signup' },
-];
+import { useTranslations } from 'next-intl';
 
 function NavBar() {
+  const t = useTranslations('Home');
+
+  const pages = [
+    { label: t('signIn'), path: '/signin' },
+    { label: t('signUp'), path: '/signup' },
+  ];
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
