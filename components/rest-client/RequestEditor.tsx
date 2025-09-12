@@ -1,16 +1,21 @@
 'use client';
 
 import { UrlBox, UrlInput, UrlMenuItem } from '@/style/styledRequestInputs';
-import { httpMethods, httpMethodsValues } from '@/types/restClient';
-import { Box, Button, Tab, Tabs, Toolbar, Typography } from '@mui/material';
+import {
+  HttpMethods,
+  httpMethodsValues,
+  RestRequest,
+} from '@/types/restClient';
+import { Box, Button, Tab, Tabs, TextField, Toolbar } from '@mui/material';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import {
   ChangeEvent,
   ReactNode,
-  SetStateAction,
   SyntheticEvent,
   useState,
   FocusEvent,
+  useRef,
+  useCallback,
 } from 'react';
 
 interface TabPanelProps {
@@ -34,11 +39,7 @@ function TabPanel(props: TabPanelProps & RestProps) {
       aria-labelledby={`tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -50,12 +51,18 @@ function a11yProps(index: number) {
   };
 }
 
-const composeUrl = (path: string, method?: string, url?: string) => {
+const composeUrl = (
+  path: string,
+  method?: string,
+  url?: string,
+  body?: string
+) => {
   const pageSlug = '/client';
   const index = path.indexOf(pageSlug);
   let newPath = path;
-  const encodedUrl = url ? encodeURIComponent(url) : undefined;
-  const vars = [method, encodedUrl];
+  const encodedUrl = url ? btoa(url) : undefined;
+  const encodedBody = body ? btoa(body) : undefined;
+  const vars = [method, encodedUrl, encodedBody];
 
   if (index !== -1) {
     const initPath = path.slice(0, index + pageSlug.length) + '/';
@@ -68,29 +75,35 @@ const composeUrl = (path: string, method?: string, url?: string) => {
   return newPath;
 };
 
-function RequestEditor() {
+function RequestEditor({ onSend }: { onSend: () => Promise<void> }) {
   const { slug } = useParams();
   const router = useRouter();
   const path = usePathname();
 
   let initMethod = 'GET';
   let initUrl = '';
+  let initBody = undefined;
+
   if (slug) {
     initMethod = slug[0].toUpperCase();
-    initUrl = decodeURIComponent(slug[1] ?? '');
+    initUrl = slug[1] ? atob(decodeURIComponent(slug[1])) : '';
+    initBody = slug[2] ? atob(decodeURIComponent(slug[2])) : undefined;
   }
 
-  const [currentTab, setCurrentTab] = useState(0);
-  const [method, setMethod] = useState<string>(initMethod as httpMethods);
+  const savedTab = useRef(0);
+  const [currentTab, setCurrentTab] = useState(savedTab.current);
+  const [method, setMethod] = useState<string>(initMethod as HttpMethods);
   const [url, setUrl] = useState<string>(initUrl);
+  const [body, setBody] = useState<string | undefined>(initBody);
 
-  const handleTabChange = (
-    event: SyntheticEvent,
-    newValue: SetStateAction<number>
-  ) => {
-    event.preventDefault();
-    setCurrentTab(newValue);
-  };
+  const handleTabChange = useCallback(
+    (event: SyntheticEvent, newValue: number) => {
+      event.preventDefault();
+      setCurrentTab(newValue);
+      savedTab.current = newValue;
+    },
+    [setCurrentTab]
+  );
 
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newSlug = event.target.value;
@@ -104,6 +117,23 @@ function RequestEditor() {
     if (url) {
       router.replace(composeUrl(path, method, url));
     }
+  };
+
+  const handleBodyChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const body = event.target.value;
+    setBody(body);
+    if (body) {
+      router.replace(composeUrl(path, method, url, body));
+    }
+  };
+
+  const handleSend = () => {
+    const request: RestRequest = {
+      url: url,
+      method: method as HttpMethods,
+      body: body ? btoa(body) : undefined,
+    };
+    onSend(request);
   };
 
   return (
@@ -140,7 +170,13 @@ function RequestEditor() {
             sx={{ flexGrow: 2, border: 0 }}
           ></UrlInput>
         </UrlBox>
-        <Button id="send" variant="contained" color="primary" size="large">
+        <Button
+          id="send"
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={handleSend}
+        >
           Send
         </Button>
       </Toolbar>
@@ -161,7 +197,12 @@ function RequestEditor() {
         Headers Component
       </TabPanel>
       <TabPanel value={currentTab} index={2}>
-        Body Component
+        <p>Body Component</p>
+        <TextField
+          id="body"
+          value={body ?? ''}
+          onChange={handleBodyChange}
+        ></TextField>
       </TabPanel>
       <TabPanel value={currentTab} index={3}>
         Code Component
