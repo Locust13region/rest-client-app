@@ -16,7 +16,6 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = [
   { label: 'Вход', path: '/signin' },
   { label: 'Регистрация', path: '/signup' },
-  { label: 'History', path: '/history' },
 ];
 
 function NavBar() {

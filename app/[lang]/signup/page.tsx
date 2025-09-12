@@ -10,7 +10,7 @@ import z from 'zod';
 import { useFormSchema, type FormData } from './types';
 import { redirect, useRouter } from 'next/navigation';
 import SignForm from '@/components/signForm/SignForm';
-import layoutLoader from '@/components/common/LayoutLoader';
+import LayoutLoader from '@/components/common/LayoutLoader';
 
 const initialFormState = {
   email: '',
@@ -28,7 +28,7 @@ export default function SignUp() {
 
   const router = useRouter();
 
-  if (loader || loading) return layoutLoader();
+  if (loader || loading) return LayoutLoader();
   if (user) redirect('/');
 
   const formData = {
