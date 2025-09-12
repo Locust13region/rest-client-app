@@ -1,4 +1,4 @@
-import PrivateRoute from '@/components/common/private-route';
+import PrivateRoute from '@/components/common/PrivateRoute';
 import { ReactNode } from 'react';
 
 function ClientLayout({

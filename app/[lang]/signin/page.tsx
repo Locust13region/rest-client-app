@@ -7,8 +7,8 @@ import {
 } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/config';
 import { redirect, useRouter } from 'next/navigation';
-import SignForm from '@/components/sign-form/sign-form';
-import layoutLoader from '@/components/common/layout-loader';
+import SignForm from '@/components/signForm/SignForm';
+import layoutLoader from '@/components/common/LayoutLoader';
 
 export default function SignIn() {
   const [user, loader] = useAuthState(auth);

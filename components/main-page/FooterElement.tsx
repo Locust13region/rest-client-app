@@ -1,7 +1,7 @@
 import React from 'react';
 import NextLink from 'next/link';
 import { Box, Typography, Link, Container } from '@mui/material';
-import GithubLink from '../common/github-link';
+import GithubLink from '../common/githubLink';
 
 function FooterElement() {
   return (

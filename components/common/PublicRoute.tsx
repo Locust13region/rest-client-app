@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/firebase/config';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
-import layoutLoader from './layout-loader';
+import layoutLoader from './LayoutLoader';
 
 export default function PublicRoute({ children }: { children: ReactNode }) {
   const [user, loading] = useAuthState(auth);

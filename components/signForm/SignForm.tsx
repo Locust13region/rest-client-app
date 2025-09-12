@@ -5,7 +5,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Card, SignContainer } from '@/style/styledSign';
+import { Card, SignContainer } from '@/style/StyledSign';
 import MuiLink from '@mui/material/Link';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
@@ -107,7 +107,7 @@ const SignForm: FC<SignFormProps> = ({
         </Divider>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Typography sx={{ textAlign: 'center' }}>
-            {t(formType === 'signUp' ? 'alreadyHave' : "don'tHave")}
+            {t(formType === 'signUp' ? 'alreadyHave' : 'noAccount ')}
             {'  '}
             <Link href={formType === 'signUp' ? '/signin' : '/signup'}>
               <MuiLink

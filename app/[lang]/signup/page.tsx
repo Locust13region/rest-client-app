@@ -9,8 +9,8 @@ import { auth } from '@/firebase/config';
 import z from 'zod';
 import { useFormSchema, type FormData } from './types';
 import { redirect, useRouter } from 'next/navigation';
-import SignForm from '@/components/sign-form/sign-form';
-import layoutLoader from '@/components/common/layout-loader';
+import SignForm from '@/components/signForm/SignForm';
+import layoutLoader from '@/components/common/LayoutLoader';
 
 const initialFormState = {
   email: '',
