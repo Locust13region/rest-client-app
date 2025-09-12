@@ -1,6 +1,7 @@
 import { Tab, Tabs, TextField } from '@mui/material';
 import TabPanel from '../common/TabPanel';
 import { ChangeEvent, memo, SyntheticEvent } from 'react';
+import { useTranslations } from 'next-intl';
 
 function a11yProps(index: number) {
   return {
@@ -21,6 +22,8 @@ const RequestSettings = memo(function RequestSettings({
   onTabChange,
   onBodyChange,
 }: RequestSettingsProps) {
+  const t = useTranslations('RequestEditor');
+
   return (
     <>
       <Tabs
@@ -28,10 +31,10 @@ const RequestSettings = memo(function RequestSettings({
         onChange={onTabChange}
         aria-label="request params tabs"
       >
-        <Tab label="Query" {...a11yProps(0)}></Tab>
-        <Tab label="Headers" {...a11yProps(1)}></Tab>
-        <Tab label="Body" {...a11yProps(2)}></Tab>
-        <Tab label="Code snippets" {...a11yProps(3)}></Tab>
+        <Tab label={t('query')} {...a11yProps(0)}></Tab>
+        <Tab label={t('headers')} {...a11yProps(1)}></Tab>
+        <Tab label={t('body')} {...a11yProps(2)}></Tab>
+        <Tab label={t('codeSnippets')} {...a11yProps(3)}></Tab>
       </Tabs>
       <TabPanel value={currentTab} index={0}>
         Query Component

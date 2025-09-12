@@ -18,6 +18,7 @@ import {
 } from 'react';
 import RequestSettings from './RequestSettings';
 import { composeUrl } from '@/service/urlUtils';
+import { useTranslations } from 'next-intl';
 
 const CLIENT_PAGE = '/client';
 
@@ -29,6 +30,7 @@ function RequestEditor({
   const { slug } = useParams();
   const router = useRouter();
   const path = usePathname();
+  const t = useTranslations('RequestEditor');
 
   let initMethod = 'GET';
   let initUrl = '';
@@ -109,7 +111,7 @@ function RequestEditor({
           <UrlInput
             id="url"
             variant="outlined"
-            placeholder="Enter URL"
+            placeholder={t('urlPlaceholder')}
             value={url}
             onBlur={handleUrlBlur}
             onChange={(e) => setUrl(e.currentTarget.value)}
@@ -123,7 +125,7 @@ function RequestEditor({
           size="large"
           onClick={handleSend}
         >
-          Send
+          {t('send')}
         </Button>
       </Toolbar>
       <RequestSettings
