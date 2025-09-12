@@ -25,7 +25,7 @@ interface TabPanelProps {
 }
 
 interface RestProps {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 function TabPanel(props: TabPanelProps & RestProps) {
@@ -75,7 +75,11 @@ const composeUrl = (
   return newPath;
 };
 
-function RequestEditor({ onSend }: { onSend: () => Promise<void> }) {
+function RequestEditor({
+  onSend,
+}: {
+  onSend: (_req: RestRequest) => Promise<void>;
+}) {
   const { slug } = useParams();
   const router = useRouter();
   const path = usePathname();

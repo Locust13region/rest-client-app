@@ -8,7 +8,7 @@ const RequestEditor = lazy(
 );
 
 function RestClient() {
-  const [textResponse, setTextResponse] = useState<RestResponse | void>({});
+  const [textResponse, setTextResponse] = useState<RestResponse | Error>({});
 
   const handleSend = async (request: RestRequest) => {
     const { url, method, body } = request;
