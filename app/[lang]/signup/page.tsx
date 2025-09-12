@@ -11,6 +11,8 @@ import { useFormSchema, type FormData } from './types';
 import { redirect, useRouter } from 'next/navigation';
 import SignForm from '@/components/signForm/SignForm';
 import LayoutLoader from '@/components/common/LayoutLoader';
+// import { MessageContext } from '@/components/common/MessageContextProvider';
+// test Container in RootLayout
 
 const initialFormState = {
   email: '',
@@ -22,6 +24,7 @@ export default function SignUp() {
   const [userFormData, setFormData] = useState<FormData>(initialFormState);
   const [showErrors, setShowErrors] = useState(false);
   const formSchema = useFormSchema();
+  // const { addSnackMessage } = useContext(MessageContext);
 
   const [createUser, result, loading, createUserError] =
     useCreateUserWithEmailAndPassword(auth);
@@ -66,6 +69,9 @@ export default function SignUp() {
   }
 
   if (!loading && createUserError) {
+    // addSnackMessage({ text: 'Signed up1', messageType: 'success' });
+    // addSnackMessage({ text: 'Signed up2', messageType: 'success' });
+    // addSnackMessage({ text: 'Signed up3', messageType: 'success' });
     console.log('Signed up:', createUserError.message);
   }
 
