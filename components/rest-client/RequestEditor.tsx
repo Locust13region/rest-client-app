@@ -6,74 +6,20 @@ import {
   httpMethodsValues,
   RestRequest,
 } from '@/types/restClient';
-import { Box, Button, Tab, Tabs, TextField, Toolbar } from '@mui/material';
+import { Box, Button, Toolbar } from '@mui/material';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import {
   ChangeEvent,
-  ReactNode,
   SyntheticEvent,
   useState,
   FocusEvent,
   useRef,
   useCallback,
 } from 'react';
+import RequestSettings from './RequestSettings';
+import { composeUrl } from '@/service/urlUtils';
 
-interface TabPanelProps {
-  children: ReactNode;
-  index: number;
-  value: number;
-}
-
-interface RestProps {
-  [key: string]: unknown;
-}
-
-function TabPanel(props: TabPanelProps & RestProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </div>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `tab-${index}`,
-    'aria-controls': `tabpanel-${index}`,
-  };
-}
-
-const composeUrl = (
-  path: string,
-  method?: string,
-  url?: string,
-  body?: string
-) => {
-  const pageSlug = '/client';
-  const index = path.indexOf(pageSlug);
-  let newPath = path;
-  const encodedUrl = url ? btoa(url) : undefined;
-  const encodedBody = body ? btoa(body) : undefined;
-  const vars = [method, encodedUrl, encodedBody];
-
-  if (index !== -1) {
-    const initPath = path.slice(0, index + pageSlug.length) + '/';
-    newPath =
-      vars.reduce((acc, param) => {
-        if (!param) return acc;
-        return acc?.concat(`${param}/`);
-      }, initPath) ?? newPath;
-  }
-  return newPath;
-};
+const CLIENT_PAGE = '/client';
 
 function RequestEditor({
   onSend,
@@ -112,23 +58,19 @@ function RequestEditor({
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newSlug = event.target.value;
     setMethod(newSlug);
-    router.replace(composeUrl(path, newSlug));
+    router.replace(composeUrl(CLIENT_PAGE, path, newSlug, url, body));
   };
 
   const handleUrlBlur = (event: FocusEvent<HTMLInputElement>) => {
     const url = event.target.value;
     setUrl(url);
-    if (url) {
-      router.replace(composeUrl(path, method, url));
-    }
+    router.replace(composeUrl(CLIENT_PAGE, path, method, url, body));
   };
 
   const handleBodyChange = (event: ChangeEvent<HTMLInputElement>) => {
     const body = event.target.value;
     setBody(body);
-    if (body) {
-      router.replace(composeUrl(path, method, url, body));
-    }
+    router.replace(composeUrl(CLIENT_PAGE, path, method, url, body));
   };
 
   const handleSend = () => {
@@ -184,33 +126,12 @@ function RequestEditor({
           Send
         </Button>
       </Toolbar>
-      <Tabs
-        value={currentTab}
-        onChange={handleTabChange}
-        aria-label="request params tabs"
-      >
-        <Tab label="Query" {...a11yProps(0)}></Tab>
-        <Tab label="Headers" {...a11yProps(1)}></Tab>
-        <Tab label="Body" {...a11yProps(2)}></Tab>
-        <Tab label="Code snippets" {...a11yProps(3)}></Tab>
-      </Tabs>
-      <TabPanel value={currentTab} index={0}>
-        Query Component
-      </TabPanel>
-      <TabPanel value={currentTab} index={1}>
-        Headers Component
-      </TabPanel>
-      <TabPanel value={currentTab} index={2}>
-        <p>Body Component</p>
-        <TextField
-          id="body"
-          value={body ?? ''}
-          onChange={handleBodyChange}
-        ></TextField>
-      </TabPanel>
-      <TabPanel value={currentTab} index={3}>
-        Code Component
-      </TabPanel>
+      <RequestSettings
+        currentTab={currentTab}
+        body={body}
+        onTabChange={handleTabChange}
+        onBodyChange={handleBodyChange}
+      />
     </Box>
   );
 }
