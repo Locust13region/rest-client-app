@@ -21,11 +21,20 @@ function FooterElement() {
         <GetLink
           link={'https://github.com/Locust13region'}
           name={'Locust13region'}
+          newTab={true}
         />
 
-        <GetLink link={'https://github.com/iakhot'} name={'iakhot'} />
+        <GetLink
+          link={'https://github.com/iakhot'}
+          name={'iakhot'}
+          newTab={true}
+        />
 
-        <GetLink link={'https://github.com/Dedal88'} name={'Dedal88'} />
+        <GetLink
+          link={'https://github.com/Dedal88'}
+          name={'Dedal88'}
+          newTab={true}
+        />
 
         <Typography
           variant="body2"

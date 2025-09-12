@@ -4,15 +4,16 @@ import NextLink from 'next/link';
 interface IGetLink {
   link: string;
   name: string;
+  newTab?: boolean;
 }
 
-function GetLink({ link, name }: IGetLink) {
+function GetLink({ link, name, newTab }: IGetLink) {
   return (
     <Link
       component={NextLink}
       variant="body2"
       href={link}
-      target="_blank"
+      target={newTab ? '_blank' : undefined}
       rel="noopener noreferrer"
       sx={{
         textDecoration: 'none',
