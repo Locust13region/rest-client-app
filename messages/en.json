@@ -24,5 +24,10 @@
     "passwordUppercaseError": "Add one uppercase",
     "passwordNumberError": "Add one number",
     "passwordSpecialError": "Add one special character"
+  },
+  "Home": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "welcome": "Welcome !"
   }
 }

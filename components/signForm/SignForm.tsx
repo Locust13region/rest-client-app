@@ -5,7 +5,7 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Card, SignContainer } from '@/style/StyledSign';
+import { Card, SignContainer } from '@/style/styledSign';
 import MuiLink from '@mui/material/Link';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
