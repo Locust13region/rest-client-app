@@ -29,7 +29,7 @@ function FooterElement() {
 
         <Typography
           variant="body2"
-          color="text.secondary"
+          color="text.primary"
           sx={{ mt: { xs: 1, sm: 0 } }}
         >
           © 2025

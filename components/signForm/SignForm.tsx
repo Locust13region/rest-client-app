@@ -6,10 +6,9 @@ import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Card, SignContainer } from '@/style/styledSign';
-import MuiLink from '@mui/material/Link';
-import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { FC, FormEventHandler, Dispatch, SetStateAction } from 'react';
+import GetLink from '@/components/common/GetLink';
 
 type SignFormProps = {
   formType: 'signUp' | 'signIn';
@@ -109,15 +108,10 @@ const SignForm: FC<SignFormProps> = ({
           <Typography sx={{ textAlign: 'center' }}>
             {t(formType === 'signUp' ? 'alreadyHave' : 'noAccount ')}
             {'  '}
-            <Link href={formType === 'signUp' ? '/signin' : '/signup'}>
-              <MuiLink
-                component="span"
-                variant="body2"
-                sx={{ alignSelf: 'center' }}
-              >
-                {t(formType === 'signUp' ? 'signIn' : 'signUp')}
-              </MuiLink>
-            </Link>
+            <GetLink
+              link={formType === 'signUp' ? '/signin' : '/signup'}
+              name={t(formType === 'signUp' ? 'signIn' : 'signUp')}
+            />
           </Typography>
         </Box>
       </Card>
