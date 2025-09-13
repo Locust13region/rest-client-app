@@ -77,9 +77,12 @@ export default function SignUp() {
 
     if (createUserError && createUserError !== lastErrorRef.current) {
       lastErrorRef.current = createUserError;
-      addSnackMessage({ text: createUserError.code, messageType: 'error' });
+      addSnackMessage({
+        text: t('signInError') + createUserError.code,
+        messageType: 'error',
+      });
     }
-  }, [createUserError, addSnackMessage, createUserResult, router]);
+  }, [createUserError, addSnackMessage, createUserResult, router, t]);
 
   const errors = showErrors ? validate() : undefined;
 

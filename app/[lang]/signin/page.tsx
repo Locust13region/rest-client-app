@@ -57,9 +57,12 @@ export default function SignIn() {
 
     if (signInUserError && signInUserError !== lastErrorRef.current) {
       lastErrorRef.current = signInUserError;
-      addSnackMessage({ text: signInUserError.code, messageType: 'error' });
+      addSnackMessage({
+        text: t('signInError') + signInUserError.code,
+        messageType: 'error',
+      });
     }
-  }, [addSnackMessage, router, signInUserError, signInUserResult]);
+  }, [addSnackMessage, router, signInUserError, signInUserResult, t]);
 
   const content =
     loadingUser || signInUserLoading ? (

@@ -25,7 +25,9 @@
     "passwordNumberError": "Add one number",
     "passwordSpecialError": "Add one special character",
     "signInSuccess": "Successful signin",
-    "signUpSuccess": "Successful signup"
+    "signUpSuccess": "Successful signup",
+    "signInError": "Signin Error: ",
+    "signUpError": "Signup Error: "
   },
   "Home": {
     "signIn": "Sign In",

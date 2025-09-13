@@ -24,7 +24,6 @@ function NavBar() {
   const pages = [
     { label: t('signIn'), path: '/signin' },
     { label: t('signUp'), path: '/signup' },
-    { label: 'History', path: '/history' },
   ];
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(

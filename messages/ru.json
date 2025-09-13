@@ -25,7 +25,9 @@
     "passwordNumberError": "Добавьте хотя бы одну цифру",
     "passwordSpecialError": "Добавьте хотя бы один специальный символ",
     "signInSuccess": "Успешный вход",
-    "signUpSuccess": "Успешная регистрация"
+    "signUpSuccess": "Успешная регистрация",
+    "signInError": "Ошибка входа: ",
+    "signUpError": "Ошибка регистрации: "
   },
   "Home": {
     "signIn": "Вход",

@@ -8,7 +8,7 @@ type SnackbarMessage = {
   messageType: 'success' | 'error' | 'warning' | 'info';
 };
 
-type ContextMessage = {
+type MessageItem = {
   id: string;
 } & SnackbarMessage;
 
@@ -21,7 +21,7 @@ export const MessageContext = createContext<MessageContextType>({
 });
 
 export default function MessageProvider({ children }: { children: ReactNode }) {
-  const [snackMessages, setSnackMessages] = useState<ContextMessage[]>([]);
+  const [snackMessages, setSnackMessages] = useState<MessageItem[]>([]);
 
   const addSnackMessage = (message: SnackbarMessage) => {
     setSnackMessages((prev) => [
@@ -30,9 +30,7 @@ export default function MessageProvider({ children }: { children: ReactNode }) {
     ]);
   };
   const closeSnackMessage = (id: string) => {
-    console.log('snack id', id);
     const newSnacks = snackMessages.filter((message) => message.id !== id);
-    console.log(newSnacks);
     setSnackMessages(newSnacks);
   };
 
@@ -47,15 +45,11 @@ export default function MessageProvider({ children }: { children: ReactNode }) {
         <Snackbar
           key={snack.id}
           open
-          slotProps={{
-            clickAwayListener: {
-              onClickAway: (event) => {
-                event.defaultPrevented;
-              },
-            },
+          autoHideDuration={8000}
+          onClose={(_, reason) => {
+            if (reason === 'clickaway') return;
+            autoCloseSnackMessage();
           }}
-          autoHideDuration={3000}
-          onClose={autoCloseSnackMessage}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           sx={{ top: `${index * 60}px !important` }}
         >
