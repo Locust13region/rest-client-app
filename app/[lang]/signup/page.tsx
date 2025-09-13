@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import {
   useAuthState,
   useCreateUserWithEmailAndPassword,
@@ -8,10 +8,10 @@ import {
 import { auth } from '@/firebase/config';
 import z from 'zod';
 import { useFormSchema, type FormData } from './types';
-import { redirect, useRouter } from 'next/navigation';
+// import { redirect, useRouter } from 'next/navigation';
 import SignForm from '@/components/signForm/SignForm';
 import LayoutLoader from '@/components/common/LayoutLoader';
-// import { MessageContext } from '@/components/common/MessageContextProvider';
+import { MessageContext } from '@/components/common/MessageContextProvider';
 // test Container in RootLayout
 
 const initialFormState = {
@@ -20,19 +20,18 @@ const initialFormState = {
 };
 
 export default function SignUp() {
-  const [user, loader] = useAuthState(auth);
+  const [loader] = useAuthState(auth);
   const [userFormData, setFormData] = useState<FormData>(initialFormState);
   const [showErrors, setShowErrors] = useState(false);
   const formSchema = useFormSchema();
-  // const { addSnackMessage } = useContext(MessageContext);
-
+  const { addSnackMessage } = useContext(MessageContext);
   const [createUser, result, loading, createUserError] =
     useCreateUserWithEmailAndPassword(auth);
+  // const router = useRouter();
 
-  const router = useRouter();
+  // if (user) redirect('/');
 
-  if (loader || loading) return LayoutLoader();
-  if (user) redirect('/');
+  if (loader) return LayoutLoader();
 
   const formData = {
     ...initialFormState,
@@ -50,7 +49,7 @@ export default function SignUp() {
 
   const reset = () => setFormData(initialFormState);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const errors = validate();
@@ -59,21 +58,21 @@ export default function SignUp() {
       setShowErrors(true);
       return;
     }
-    createUser(userFormData.email, userFormData.password);
+    await createUser(userFormData.email, userFormData.password);
+
+    if (!loading && result) {
+      addSnackMessage({ text: 'Signed up!', messageType: 'success' });
+      console.log('Signed up:', result.user);
+      reset();
+      // router.replace('/');
+    }
+
+    console.log('ERROR', loading, createUserError);
+
+    if (!loading && createUserError) {
+      addSnackMessage({ text: createUserError.code, messageType: 'error' });
+    }
   };
-
-  if (!loading && result) {
-    console.log('Signed up:', result.user);
-    reset();
-    router.push('/');
-  }
-
-  if (!loading && createUserError) {
-    // addSnackMessage({ text: 'Signed up1', messageType: 'success' });
-    // addSnackMessage({ text: 'Signed up2', messageType: 'success' });
-    // addSnackMessage({ text: 'Signed up3', messageType: 'success' });
-    console.log('Signed up:', createUserError.message);
-  }
 
   const errors = showErrors ? validate() : undefined;
 

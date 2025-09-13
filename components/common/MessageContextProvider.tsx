@@ -29,19 +29,35 @@ export default function MessageProvider({ children }: { children: ReactNode }) {
       { id: crypto.randomUUID(), ...message },
     ]);
   };
-  const closeSnackMessage = (id: string) =>
-    setSnackMessages(snackMessages.filter((message) => message.id !== id));
+  const closeSnackMessage = (id: string) => {
+    console.log('snack id', id);
+    const newSnacks = snackMessages.filter((message) => message.id !== id);
+    console.log(newSnacks);
+    setSnackMessages(newSnacks);
+  };
+
+  const autoCloseSnackMessage = () => {
+    setSnackMessages([]);
+  };
 
   return (
     <MessageContext value={{ addSnackMessage }}>
       {children}
-      {snackMessages.map((snack) => (
+      {snackMessages.map((snack, index) => (
         <Snackbar
           key={snack.id}
           open
+          slotProps={{
+            clickAwayListener: {
+              onClickAway: (event) => {
+                event.defaultPrevented;
+              },
+            },
+          }}
           autoHideDuration={3000}
-          onClose={() => closeSnackMessage(snack.id)}
+          onClose={autoCloseSnackMessage}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          sx={{ top: `${index * 60}px !important` }}
         >
           <Alert
             severity={snack.messageType}
