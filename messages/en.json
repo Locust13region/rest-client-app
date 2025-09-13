@@ -23,7 +23,9 @@
     "passwordLowercaseError": "Add one lowercase",
     "passwordUppercaseError": "Add one uppercase",
     "passwordNumberError": "Add one number",
-    "passwordSpecialError": "Add one special character"
+    "passwordSpecialError": "Add one special character",
+    "signInSuccess": "Successful signin",
+    "signUpSuccess": "Successful signup"
   },
   "Home": {
     "signIn": "Sign In",

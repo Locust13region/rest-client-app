@@ -12,6 +12,7 @@ import LayoutLoader from '@/components/common/LayoutLoader';
 import { MessageContext } from '@/components/common/MessageContextProvider';
 import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';
+import { useTranslations } from 'next-intl';
 
 export default function SignIn() {
   const [user, loadingUser] = useAuthState(auth);
@@ -19,6 +20,7 @@ export default function SignIn() {
   const [signInUser, signInUserResult, signInUserLoading, signInUserError] =
     useSignInWithEmailAndPassword(auth);
   const router = useRouter();
+  const t = useTranslations('Sign');
 
   if (user) redirect('/');
 
@@ -40,7 +42,7 @@ export default function SignIn() {
 
     const res = await signInUser(email, password);
     if (res) {
-      addSnackMessage({ text: 'Signed In!', messageType: 'success' });
+      addSnackMessage({ text: t('signInSuccess'), messageType: 'success' });
     }
   };
 

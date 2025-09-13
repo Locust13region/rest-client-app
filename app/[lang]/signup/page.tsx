@@ -14,6 +14,7 @@ import LayoutLoader from '@/components/common/LayoutLoader';
 import { MessageContext } from '@/components/common/MessageContextProvider';
 import { FirebaseError } from 'firebase/app';
 import { UserCredential } from 'firebase/auth';
+import { useTranslations } from 'next-intl';
 
 const initialFormState = {
   email: '',
@@ -29,6 +30,7 @@ export default function SignUp() {
   const [createUser, createUserResult, createUserLoading, createUserError] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
+  const t = useTranslations('Sign');
 
   if (user) redirect('/');
 
@@ -59,7 +61,7 @@ export default function SignUp() {
     }
     const res = await createUser(userFormData.email, userFormData.password);
     if (res) {
-      addSnackMessage({ text: 'Signed up!', messageType: 'success' });
+      addSnackMessage({ text: t('signUpSuccess'), messageType: 'success' });
     }
   };
 
