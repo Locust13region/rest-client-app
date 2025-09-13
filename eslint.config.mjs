@@ -15,8 +15,9 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   js.configs.recommended,
+  ...tseslint.configs.strict,
   {
-    ignores: ['node_modules/**', '.next/**', 'dist/**'],
+    ignores: ['node_modules/**', '.next/**', 'dist/**', '**/*.d.ts'],
   },
 
   {
@@ -46,6 +47,7 @@ const eslintConfig = [
       ...js.configs.recommended.rules,
       'prettier/prettier': ['error', { singleQuote: true, semi: true }],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
@@ -55,6 +57,12 @@ const eslintConfig = [
       '@next/next/no-html-link-for-pages': ['warn', './app'],
       '@next/next/no-head-import-in-document': 'warn',
       '@next/next/next-script-for-ga': 'warn',
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+        },
+      ],
     },
     settings: {
       react: {

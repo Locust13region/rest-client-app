@@ -10,6 +10,14 @@
     "title": "Something went wrong",
     "retry": "Try again"
   },
+  "RequestEditor": {
+    "send": "Send",
+    "urlPlaceholder": "Enter URL",
+    "codeSnippets": "Code snippets",
+    "query": "Query",
+    "headers": "Headers",
+    "body": "Body"
+  },
   "Sign": {
     "signIn": "Sign In",
     "signUp": "Sign Up",
@@ -23,7 +31,11 @@
     "passwordLowercaseError": "Add one lowercase",
     "passwordUppercaseError": "Add one uppercase",
     "passwordNumberError": "Add one number",
-    "passwordSpecialError": "Add one special character"
+    "passwordSpecialError": "Add one special character",
+    "signInSuccess": "Successful signin",
+    "signUpSuccess": "Successful signup",
+    "signInError": "Signin Error: ",
+    "signUpError": "Signup Error: "
   },
   "Home": {
     "signIn": "Sign In",

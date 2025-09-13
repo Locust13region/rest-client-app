@@ -10,6 +10,14 @@
     "title": "Что-то пошло не так",
     "retry": "Перезагрузить"
   },
+  "RequestEditor": {
+    "send": "Выполнить",
+    "urlPlaceholder": "Введите URL",
+    "codeSnippets": "Фрагмент кода",
+    "query": "Параметры",
+    "headers": "Заголовки",
+    "body": "Тело запроса"
+  },
   "Sign": {
     "signIn": "Войти",
     "signUp": "Регистрация",
@@ -23,7 +31,11 @@
     "passwordLowercaseError": "Добавьте хотя бы одну строчную букву",
     "passwordUppercaseError": "Добавьте хотя бы одну заглавную букву",
     "passwordNumberError": "Добавьте хотя бы одну цифру",
-    "passwordSpecialError": "Добавьте хотя бы один специальный символ"
+    "passwordSpecialError": "Добавьте хотя бы один специальный символ",
+    "signInSuccess": "Успешный вход",
+    "signUpSuccess": "Успешная регистрация",
+    "signInError": "Ошибка входа: ",
+    "signUpError": "Ошибка регистрации: "
   },
   "Home": {
     "signIn": "Вход",
