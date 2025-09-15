@@ -40,6 +40,7 @@ export default async function RootLayout({
                   flexDirection: 'column',
                   minHeight: '100vh',
                 }}
+                maxWidth="xl"
               >
                 <NavBar />
                 <Box

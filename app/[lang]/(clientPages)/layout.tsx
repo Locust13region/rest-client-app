@@ -36,7 +36,7 @@ export default async function ClientLayout({
             display: 'flex',
             flexGrow: 1,
             mt: 4,
-            px: 2,
+            px: { xs: 2, sm: 0 },
             flexDirection: { xs: 'column', sm: 'row' },
           }}
         >
@@ -47,8 +47,6 @@ export default async function ClientLayout({
               display: 'flex',
               flexDirection: { xs: 'row', sm: 'column' },
               gap: 2,
-              borderRight: { xs: 'none', sm: '1px solid #ccc' },
-              borderBottom: { xs: '1px solid #ccc', sm: 'none' },
               pr: { xs: 0, sm: 2 },
               pb: { xs: 1, sm: 0 },
               overflowX: { xs: 'auto', sm: 'visible' },
