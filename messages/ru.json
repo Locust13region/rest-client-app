@@ -14,8 +14,7 @@
     "send": "Выполнить",
     "urlPlaceholder": "Введите URL",
     "codeSnippets": "Фрагмент кода",
-    "query": "Параметры",
-    "headers": "Заголовки",
+    "headers": "HTTP Заголовки",
     "body": "Тело запроса"
   },
   "Sign": {

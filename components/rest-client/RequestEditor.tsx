@@ -8,14 +8,7 @@ import {
 } from '@/types/restClient';
 import { Box, Button, Toolbar } from '@mui/material';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import {
-  ChangeEvent,
-  SyntheticEvent,
-  useState,
-  FocusEvent,
-  useRef,
-  useCallback,
-} from 'react';
+import { ChangeEvent, useState, FocusEvent } from 'react';
 import RequestSettings from './RequestSettings';
 import { composeUrl } from '@/service/urlUtils';
 import { useTranslations } from 'next-intl';
@@ -42,20 +35,9 @@ function RequestEditor({
     initBody = slug[2] ? atob(decodeURIComponent(slug[2])) : undefined;
   }
 
-  const savedTab = useRef(0);
-  const [currentTab, setCurrentTab] = useState(savedTab.current);
   const [method, setMethod] = useState<string>(initMethod as HttpMethods);
   const [url, setUrl] = useState<string>(initUrl);
   const [body, setBody] = useState<string | undefined>(initBody);
-
-  const handleTabChange = useCallback(
-    (event: SyntheticEvent, newValue: number) => {
-      event.preventDefault();
-      setCurrentTab(newValue);
-      savedTab.current = newValue;
-    },
-    [setCurrentTab]
-  );
 
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newSlug = event.target.value;
@@ -128,12 +110,7 @@ function RequestEditor({
           {t('send')}
         </Button>
       </Toolbar>
-      <RequestSettings
-        currentTab={currentTab}
-        body={body}
-        onTabChange={handleTabChange}
-        onBodyChange={handleBodyChange}
-      />
+      <RequestSettings body={body} onBodyChange={handleBodyChange} />
     </Box>
   );
 }

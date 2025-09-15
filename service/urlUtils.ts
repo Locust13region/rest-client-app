@@ -21,3 +21,10 @@ export const composeUrl = (
   }
   return newPath;
 };
+
+export function a11yTabProps(index: number) {
+  return {
+    id: `tab-${index}`,
+    'aria-controls': `tabpanel-${index}`,
+  };
+}

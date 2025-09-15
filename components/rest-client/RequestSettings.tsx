@@ -1,48 +1,51 @@
 import { Tab, Tabs, TextField } from '@mui/material';
 import TabPanel from '../common/TabPanel';
-import { ChangeEvent, memo, SyntheticEvent } from 'react';
+import { ChangeEvent, memo, SyntheticEvent, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { a11yTabProps } from '@/service/urlUtils';
+import { useClientStore } from '@/store/clientStore';
+import KeyValueEditor from './KeyValueEditor';
 
-function a11yProps(index: number) {
-  return {
-    id: `tab-${index}`,
-    'aria-controls': `tabpanel-${index}`,
-  };
-}
 interface RequestSettingsProps {
-  currentTab: number;
+  //   headers?: Record<string, string>;
   body?: string;
-  onTabChange: (_event: SyntheticEvent, _newValue: number) => void;
   onBodyChange: (_event: ChangeEvent<HTMLInputElement>) => void;
+  //   onHeadersChange: () => void;
 }
 
 const RequestSettings = memo(function RequestSettings({
-  currentTab,
+  //headers,
   body,
-  onTabChange,
+  //onHeadersChange,
   onBodyChange,
 }: RequestSettingsProps) {
   const t = useTranslations('RequestEditor');
+  const setStoreTab = useClientStore((state) => state.setTab);
+  const storeTab = useClientStore((state) => state.currentTab);
+  const [currentTab, setCurrentTab] = useState(storeTab);
+
+  const handleTabChange = (event: SyntheticEvent, value: number) => {
+    event.preventDefault();
+    setStoreTab(value);
+    setCurrentTab(value);
+  };
 
   return (
     <>
       <Tabs
         value={currentTab}
-        onChange={onTabChange}
+        onChange={handleTabChange}
         aria-label="request params tabs"
       >
-        <Tab label={t('query')} {...a11yProps(0)}></Tab>
-        <Tab label={t('headers')} {...a11yProps(1)}></Tab>
-        <Tab label={t('body')} {...a11yProps(2)}></Tab>
-        <Tab label={t('codeSnippets')} {...a11yProps(3)}></Tab>
+        <Tab label={t('headers')} {...a11yTabProps(0)}></Tab>
+        <Tab label={t('body')} {...a11yTabProps(1)}></Tab>
+        <Tab label={t('codeSnippets')} {...a11yTabProps(2)}></Tab>
       </Tabs>
-      <TabPanel value={currentTab} index={0}>
-        Query Component
+      <TabPanel key={0} value={currentTab} index={0}>
+        <p> Headers Component</p>
+        <KeyValueEditor />
       </TabPanel>
-      <TabPanel value={currentTab} index={1}>
-        Headers Component
-      </TabPanel>
-      <TabPanel value={currentTab} index={2}>
+      <TabPanel key={1} value={currentTab} index={1}>
         <p>Body Component</p>
         <TextField
           id="body"
@@ -50,7 +53,7 @@ const RequestSettings = memo(function RequestSettings({
           onChange={onBodyChange}
         ></TextField>
       </TabPanel>
-      <TabPanel value={currentTab} index={3}>
+      <TabPanel key={2} value={currentTab} index={2}>
         Code Component
       </TabPanel>
     </>

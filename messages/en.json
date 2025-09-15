@@ -14,8 +14,7 @@
     "send": "Send",
     "urlPlaceholder": "Enter URL",
     "codeSnippets": "Code snippets",
-    "query": "Query",
-    "headers": "Headers",
+    "headers": "HTTP Headers",
     "body": "Body"
   },
   "Sign": {
