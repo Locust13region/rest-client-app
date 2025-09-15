@@ -40,7 +40,8 @@ export default async function RootLayout({
                   flexDirection: 'column',
                   minHeight: '100vh',
                 }}
-                maxWidth="xl"
+                maxWidth={false}
+                disableGutters={true}
               >
                 <NavBar />
                 <Box

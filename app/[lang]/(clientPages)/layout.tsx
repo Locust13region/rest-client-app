@@ -26,7 +26,6 @@ export default async function ClientLayout({
           paddingTop: 8,
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh',
         }}
       >
         <NavBarAuth />
