@@ -29,6 +29,18 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('Signup page', () => {
+  it('renders component loader', () => {
+    (useAuthState as Mock).mockReturnValue([null, true, undefined]);
+    (useCreateUserWithEmailAndPassword as Mock).mockReturnValue([
+      vi.fn().mockResolvedValue({ user: { uid: '123' } }),
+      null,
+      false,
+      null,
+    ]);
+    renderWithProviders(<SignUp />, { locale: 'en' });
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  });
+
   it('renders correctly in EN locale & successful signup', async () => {
     const handleSubmit = vi.fn().mockImplementation((e) => e.preventDefault());
     (useAuthState as Mock).mockReturnValue([null, false, undefined]);
@@ -49,18 +61,21 @@ describe('Signup page', () => {
       expect(handleSubmit).not.toHaveBeenCalled();
     });
     screen.debug(document.body);
-    // const email = screen.getByLabelText(/email/i);
-    // const pwd = screen.getByLabelText(/password/i);
+    const email = screen.getByLabelText(/email/i);
+    const pwd = screen.getByLabelText(/password/i);
 
-    // const emailValInvalid = 'user!fake.com';
-    // const pwdValInvalid = '1234';
-    // await user.type(email, emailValInvalid);
-    // await user.type(pwd, pwdValInvalid);
-    // expect(email).toHaveValue(emailValInvalid);
-    // expect(pwd).toHaveValue(pwdValInvalid);
-    // await waitFor(() => {
-    //   expect(handleSubmit).not.toHaveBeenCalled();
-    // });
+    const emailValInvalid = 'user@fake';
+    const pwdValInvalid = '1234';
+    await user.type(email, emailValInvalid);
+    await user.type(pwd, pwdValInvalid);
+    expect(email).toHaveValue(emailValInvalid);
+    expect(pwd).toHaveValue(pwdValInvalid);
+    expect(screen.getByText(/Enter valid email/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Must be at least 8 characters/i)
+    ).toBeInTheDocument();
+    expect(signup).toBeDisabled();
+
     // const emailValid = 'user@fake.com';
     // const pwdValid = '1234@Abc';
     // await user.clear(email);

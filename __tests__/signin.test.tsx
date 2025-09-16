@@ -29,6 +29,18 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('Signin page', () => {
+  it('renders component loader', () => {
+    (useAuthState as Mock).mockReturnValue([null, true, undefined]);
+    (useSignInWithEmailAndPassword as Mock).mockReturnValue([
+      vi.fn().mockResolvedValue({ user: { uid: '123' } }),
+      null,
+      false,
+      null,
+    ]);
+    renderWithProviders(<SignIn />, { locale: 'en' });
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  });
+
   it('renders correctly in EN locale & successful signin', async () => {
     const handleSubmit = vi.fn().mockImplementation((e) => e.preventDefault());
     (useAuthState as Mock).mockReturnValue([null, false, undefined]);
