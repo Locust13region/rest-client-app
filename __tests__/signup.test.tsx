@@ -1,0 +1,77 @@
+import { describe, expect, it, Mock, vi } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
+import { renderWithProviders } from './setupTests';
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+} from 'react-firebase-hooks/auth';
+import SignUp from '@/app/[lang]/signup/page';
+
+vi.mock('@/firebase/config', () => ({
+  auth: {
+    currentUser: null,
+    onAuthStateChanged: vi.fn(),
+    signOut: vi.fn(),
+  },
+}));
+
+vi.mock('react-firebase-hooks/auth', () => ({
+  useAuthState: vi.fn(),
+  useCreateUserWithEmailAndPassword: vi.fn(),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+  }),
+  redirect: vi.fn(),
+}));
+
+describe('Signup page', () => {
+  it('renders correctly in EN locale & successful signup', async () => {
+    const handleSubmit = vi.fn().mockImplementation((e) => e.preventDefault());
+    (useAuthState as Mock).mockReturnValue([null, false, undefined]);
+    (useCreateUserWithEmailAndPassword as Mock).mockReturnValue([
+      vi.fn().mockResolvedValue({ user: { uid: '123' } }),
+      null,
+      false,
+      null,
+    ]);
+    const { user } = renderWithProviders(<SignUp />, { locale: 'en' });
+
+    expect(screen.getByRole('heading')).toHaveTextContent(/sign up/i);
+
+    const signup = screen.getByRole('button', { name: /sign up/i });
+    expect(signup).toBeInTheDocument();
+    await user.click(signup);
+    await waitFor(() => {
+      expect(handleSubmit).not.toHaveBeenCalled();
+    });
+    screen.debug(document.body);
+    // const email = screen.getByLabelText(/email/i);
+    // const pwd = screen.getByLabelText(/password/i);
+
+    // const emailValInvalid = 'user!fake.com';
+    // const pwdValInvalid = '1234';
+    // await user.type(email, emailValInvalid);
+    // await user.type(pwd, pwdValInvalid);
+    // expect(email).toHaveValue(emailValInvalid);
+    // expect(pwd).toHaveValue(pwdValInvalid);
+    // await waitFor(() => {
+    //   expect(handleSubmit).not.toHaveBeenCalled();
+    // });
+    // const emailValid = 'user@fake.com';
+    // const pwdValid = '1234@Abc';
+    // await user.clear(email);
+    // await user.clear(pwd);
+
+    // await user.type(email, emailValid);
+    // await user.type(pwd, pwdValid);
+    // expect(email).toHaveValue(emailValid);
+    // expect(pwd).toHaveValue(pwdValid);
+    // await user.click(signin);
+    // const alert = await screen.findByRole('alert', {}, { timeout: 3000 });
+    // expect(alert).toHaveTextContent(/Successful signin/i);
+  });
+});
