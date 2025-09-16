@@ -13,7 +13,7 @@ export default function HomeAuth() {
         flexGrow: 1,
         display: 'flex',
         flexDirection: 'column',
-        Height: '100vh',
+        height: '60vh',
       }}
     >
       <CentralAreaAuth email={user?.email} />

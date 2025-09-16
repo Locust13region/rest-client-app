@@ -35,7 +35,7 @@ export default async function RootLayout({
             <MessageProvider>
               <Container
                 sx={{
-                  paddingTop: 8,
+                  paddingTop: 5,
                   display: 'flex',
                   flexDirection: 'column',
                   minHeight: '100vh',

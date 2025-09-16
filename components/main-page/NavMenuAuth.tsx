@@ -18,6 +18,7 @@ function NavMenuAuth() {
         width: 180,
         borderRight: 1,
         borderColor: 'divider',
+        height: '60vh',
       }}
     >
       <Tabs
