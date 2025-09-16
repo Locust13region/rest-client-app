@@ -86,4 +86,31 @@ describe('Signin page', () => {
     const alert = await screen.findByRole('alert', {}, { timeout: 3000 });
     expect(alert).toHaveTextContent(/Successful signin/i);
   });
+
+  it('renders sneckBar when signin fails', async () => {
+    (useAuthState as Mock).mockReturnValue([null, false, undefined]);
+    (useSignInWithEmailAndPassword as Mock).mockReturnValue([
+      vi.fn(),
+      null,
+      false,
+      { code: 'signin error' },
+    ]);
+    const { user } = renderWithProviders(<SignIn />, { locale: 'en' });
+
+    const signin = screen.getByRole('button', { name: /sign in/i });
+    const email = screen.getByLabelText(/email/i);
+    const pwd = screen.getByLabelText(/password/i);
+
+    const emailValid = 'user@fake.com';
+    const pwdValid = '!234Qwer';
+    await user.type(email, emailValid);
+    await user.type(pwd, pwdValid);
+    expect(email).toHaveValue(emailValid);
+    expect(pwd).toHaveValue(pwdValid);
+
+    await user.click(signin);
+
+    const alert = await screen.findByRole('alert', {}, { timeout: 3000 });
+    expect(alert).toHaveTextContent(/signin error/i);
+  });
 });

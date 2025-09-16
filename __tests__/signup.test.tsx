@@ -60,7 +60,6 @@ describe('Signup page', () => {
     await waitFor(() => {
       expect(handleSubmit).not.toHaveBeenCalled();
     });
-    screen.debug(document.body);
     const email = screen.getByLabelText(/email/i);
     const pwd = screen.getByLabelText(/password/i);
 
@@ -75,18 +74,32 @@ describe('Signup page', () => {
       screen.getByText(/Must be at least 8 characters/i)
     ).toBeInTheDocument();
     expect(signup).toBeDisabled();
+  });
 
-    // const emailValid = 'user@fake.com';
-    // const pwdValid = '1234@Abc';
-    // await user.clear(email);
-    // await user.clear(pwd);
+  it('renders sneckBar when signup fails', async () => {
+    (useAuthState as Mock).mockReturnValue([null, false, undefined]);
+    (useCreateUserWithEmailAndPassword as Mock).mockReturnValue([
+      vi.fn(),
+      null,
+      false,
+      { code: 'signup error' },
+    ]);
+    const { user } = renderWithProviders(<SignUp />, { locale: 'en' });
 
-    // await user.type(email, emailValid);
-    // await user.type(pwd, pwdValid);
-    // expect(email).toHaveValue(emailValid);
-    // expect(pwd).toHaveValue(pwdValid);
-    // await user.click(signin);
-    // const alert = await screen.findByRole('alert', {}, { timeout: 3000 });
-    // expect(alert).toHaveTextContent(/Successful signin/i);
+    const signup = screen.getByRole('button', { name: /sign up/i });
+    const email = screen.getByLabelText(/email/i);
+    const pwd = screen.getByLabelText(/password/i);
+
+    const emailValid = 'user@fake.com';
+    const pwdValid = '!234Qwer';
+    await user.type(email, emailValid);
+    await user.type(pwd, pwdValid);
+    expect(email).toHaveValue(emailValid);
+    expect(pwd).toHaveValue(pwdValid);
+
+    await user.click(signup);
+
+    const alert = await screen.findByRole('alert', {}, { timeout: 3000 });
+    expect(alert).toHaveTextContent(/signup error/i);
   });
 });
