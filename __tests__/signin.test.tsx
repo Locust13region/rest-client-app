@@ -87,7 +87,7 @@ describe('Signin page', () => {
     expect(alert).toHaveTextContent(/Successful signin/i);
   });
 
-  it('renders sneckBar when signin fails', async () => {
+  it('renders snackBar when signin fails', async () => {
     (useAuthState as Mock).mockReturnValue([null, false, undefined]);
     (useSignInWithEmailAndPassword as Mock).mockReturnValue([
       vi.fn(),

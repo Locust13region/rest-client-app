@@ -76,7 +76,7 @@ describe('Signup page', () => {
     expect(signup).toBeDisabled();
   });
 
-  it('renders sneckBar when signup fails', async () => {
+  it('renders snackBar when signup fails', async () => {
     (useAuthState as Mock).mockReturnValue([null, false, undefined]);
     (useCreateUserWithEmailAndPassword as Mock).mockReturnValue([
       vi.fn(),
