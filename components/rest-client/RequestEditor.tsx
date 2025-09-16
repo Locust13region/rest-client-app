@@ -57,10 +57,19 @@ function RequestEditor({
   };
 
   const handleSend = () => {
+    const headerPairs = headers.reduce(
+      (acc, header) => {
+        acc[header.key] = header.value;
+        return acc;
+      },
+      {} as Record<string, string>
+    );
+
     const request: RestRequest = {
       url: url,
       method: method as HttpMethods,
       body: body ? btoa(body) : undefined,
+      headers: headerPairs,
     };
     onSend(request);
   };

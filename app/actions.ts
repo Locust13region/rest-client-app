@@ -14,7 +14,8 @@ const wrapServerError = (error: unknown) => {
 export default async function sendRequest(
   url: string,
   method = 'GET',
-  body?: string
+  body?: string,
+  headers?: Record<string, string>
 ) {
   try {
     const start = performance.now();
@@ -27,6 +28,7 @@ export default async function sendRequest(
       referrer: '',
       method: method,
       body: stringBody,
+      headers: new Headers(headers),
     })
       .then(async (res) => {
         const end = performance.now();
