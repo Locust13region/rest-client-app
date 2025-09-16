@@ -29,7 +29,7 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('Signin page', () => {
-  it('renders correctly in EN locale', async () => {
+  it('renders correctly in EN locale & successful signin', async () => {
     const handleSubmit = vi.fn().mockImplementation((e) => e.preventDefault());
     (useAuthState as Mock).mockReturnValue([null, false, undefined]);
     (useSignInWithEmailAndPassword as Mock).mockReturnValue([
@@ -48,9 +48,9 @@ describe('Signin page', () => {
     await waitFor(() => {
       expect(handleSubmit).not.toHaveBeenCalled();
     });
+
     const email = screen.getByLabelText(/email/i);
     const pwd = screen.getByLabelText(/password/i);
-    const submit = screen.getByRole('button', { name: /sign in/i });
 
     const emailValInvalid = 'user!fake.com';
     const pwdValInvalid = '1234';
@@ -70,71 +70,8 @@ describe('Signin page', () => {
     await user.type(pwd, pwdValid);
     expect(email).toHaveValue(emailValid);
     expect(pwd).toHaveValue(pwdValid);
-    await user.click(submit);
-    // const errorSneck = await screen.findByText(/signin error/i);
-    // expect(errorSneck).toBeInTheDocument();
-  });
-
-  it.skip('renders correctly in RU locale', () => {
-    renderWithProviders(<SignIn />, { locale: 'ru' });
-
-    expect(screen.getByRole('heading')).toHaveTextContent(/Войти/i);
-    expect(screen.getByLabelText(/Почта/i)).toHaveAttribute(
-      'placeholder',
-      expect.stringMatching(/your@email.com/i)
-    );
-    expect(screen.getByLabelText(/Пароль/i)).toHaveAttribute(
-      'placeholder',
-      '••••••'
-    );
-    expect(screen.getByRole('button')).toHaveTextContent(/Войти/i);
-    expect(screen.getByText(/Еще нет аккаунта\?/i)).toBeInTheDocument();
-    expect(screen.getByRole('link')).toHaveTextContent(/регистрация/i);
-  });
-
-  it.todo('triggers "sign in" in EN locale', async () => {
-    const handleSubmit = vi.fn().mockImplementation((e) => e.preventDefault());
-    const { user } = renderWithProviders(<SignIn />, { locale: 'en' });
-    const emailVal = 'user@fake.com';
-    const email = screen.getByLabelText(/email/i);
-    expect(email).toHaveValue('');
-    await user.type(email, emailVal);
-    expect(email).toHaveValue(emailVal);
-
-    const pwdVal = '1234@Abc';
-    const pwd = screen.getByLabelText(/password/i);
-    expect(pwd).toHaveValue('');
-    await user.type(pwd, pwdVal);
-    expect(pwd).toHaveValue(pwdVal);
-
-    const signin = screen.getByRole('button', { name: /sign in/i });
-    expect(signin).toBeInTheDocument();
     await user.click(signin);
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalled();
-    });
-  });
-
-  it.todo('triggers "sign in" in RU locale', async () => {
-    const handleSubmit = vi.fn().mockImplementation((e) => e.preventDefault());
-    const { user } = renderWithProviders(<SignIn />, { locale: 'ru' });
-    const emailVal = 'user@fake.com';
-    const email = screen.getByLabelText(/почта/i);
-    expect(email).toHaveValue('');
-    await user.type(email, emailVal);
-    expect(email).toHaveValue(emailVal);
-
-    const pwdVal = '1234@Abc';
-    const pwd = screen.getByLabelText(/пароль/i);
-    expect(pwd).toHaveValue('');
-    await user.type(pwd, pwdVal);
-    expect(pwd).toHaveValue(pwdVal);
-
-    const signin = screen.getByRole('button', { name: /войти/i });
-    expect(signin).toBeInTheDocument();
-    await user.click(signin);
-    await waitFor(() => {
-      expect(handleSubmit).toHaveBeenCalled();
-    });
+    const alert = await screen.findByRole('alert', {}, { timeout: 3000 });
+    expect(alert).toHaveTextContent(/Successful signin/i);
   });
 });
