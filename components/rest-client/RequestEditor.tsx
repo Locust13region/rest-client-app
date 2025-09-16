@@ -97,6 +97,8 @@ function RequestEditor({
         flexDirection: 'column',
         gap: 2,
         maxWidth: { md: 800 },
+        borderBottom: 1,
+        borderColor: 'divider',
       }}
     >
       <Toolbar>

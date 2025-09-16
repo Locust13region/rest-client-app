@@ -15,7 +15,9 @@
     "urlPlaceholder": "Введите URL",
     "codeSnippets": "Фрагмент кода",
     "headers": "HTTP Заголовки",
-    "body": "Тело запроса"
+    "body": "Тело запроса",
+    "sendSuccess": "Запрос выполнен успешно",
+    "sendError": "Ошибка отправки запроса: "
   },
   "Sign": {
     "signIn": "Войти",
