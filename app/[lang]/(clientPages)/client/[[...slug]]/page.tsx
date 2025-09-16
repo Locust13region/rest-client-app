@@ -30,7 +30,6 @@ function RestClient() {
         <RequestEditor onSend={handleSend} />
       </Suspense>
 
-      <hr />
       <br />
       <p>{(textResponse as RestResponse).body}</p>
     </div>

@@ -2,7 +2,7 @@ import { Tab, Tabs, TextField } from '@mui/material';
 import TabPanel from '../common/TabPanel';
 import { ChangeEvent, memo, SyntheticEvent, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { a11yTabProps } from '@/service/urlUtils';
+import { a11yTabProps } from '@/service/tabsUtils';
 import { useClientStore } from '@/store/clientStore';
 import KeyValueEditor from './KeyValueEditor';
 

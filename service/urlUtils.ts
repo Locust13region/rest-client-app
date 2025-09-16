@@ -1,18 +1,17 @@
-import { KeyValuePair } from '@/types/restClient';
+import { KeyValuePair, RestRequest } from '@/types/restClient';
+import { ReadonlyURLSearchParams } from 'next/navigation';
 
 export const composeUrl = (
   pageSlug: string,
   path: string,
-  method?: string,
-  url?: string,
-  body?: string,
-  headers?: string
+  req: RestRequest
 ) => {
   const index = path.indexOf(pageSlug);
   let newPath = path;
-  const encodedUrl = url ? btoa(url) : undefined;
-  const encodedBody = body ? btoa(body) : undefined;
-  const vars = [method, encodedUrl, encodedBody, headers];
+  const encodedUrl = req.url ? btoa(req.url) : undefined;
+  const encodedBody = req.body ? btoa(req.body) : undefined;
+  const headers = req.headers ? headersToString(req.headers) : undefined;
+  const vars = [req.method, encodedUrl, encodedBody, headers];
 
   if (index !== -1) {
     const initPath = path.slice(0, index + pageSlug.length) + '/';
@@ -25,20 +24,31 @@ export const composeUrl = (
   return newPath.slice(0, -1);
 };
 
-export const composeHeaders = (headers: KeyValuePair[]): string => {
+export const headersToString = (headers: Record<string, string>): string => {
   let queryString = '';
-  for (const pair of headers) {
-    if (pair.key) {
-      const enValue = encodeURIComponent(pair.value);
-      queryString += `${pair.key}=${enValue}&`;
+  Object.entries(headers).forEach(([key, value]) => {
+    if (key) {
+      const enValue = encodeURIComponent(value);
+      queryString += `${key}=${enValue}&`;
     }
-  }
+  });
   return queryString ? `?${queryString.slice(0, -1)}` : queryString;
 };
 
-export function a11yTabProps(index: number) {
-  return {
-    id: `tab-${index}`,
-    'aria-controls': `tabpanel-${index}`,
-  };
-}
+export const headersFromSearchParams = (query: ReadonlyURLSearchParams) => {
+  const pairs: Record<string, string> = {};
+  query.entries().forEach(([key, value]) => {
+    pairs[key] = decodeURIComponent(value);
+  });
+  return pairs;
+};
+
+export const getHeaderPairs = (headers: KeyValuePair[]) => {
+  return headers.reduce(
+    (acc, header) => {
+      acc[header.key] = header.value;
+      return acc;
+    },
+    {} as Record<string, string>
+  );
+};

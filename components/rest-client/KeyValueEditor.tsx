@@ -2,9 +2,24 @@ import { useClientStore } from '@/store/clientStore';
 import { memo } from 'react';
 import KeyValueRow from './KeyValueRow';
 import { KeyValueProps } from '@/types/restClient';
+import { useSearchParams } from 'next/navigation';
+import { headersFromSearchParams } from '@/service/urlUtils';
 
 const KeyValueEditor = memo(function KeyValueEditor() {
-  const initial = useClientStore((store) => store.headers);
+  const query = useSearchParams();
+  const headerPairs = headersFromSearchParams(query);
+  const urlHeaders = Object.entries(headerPairs).map(
+    ([key, value]) =>
+      ({
+        uuid: crypto.randomUUID(),
+        key: key,
+        value: value,
+        checked: true,
+      }) as KeyValueProps
+  );
+  const stored = useClientStore((store) => store.headers);
+  const initial = stored.length > 0 ? stored : urlHeaders;
+
   const addHeader = useClientStore((store) => store.addHeader);
   const updateHeader = useClientStore((store) => store.updateHeader);
 

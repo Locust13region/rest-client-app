@@ -7,10 +7,25 @@ import {
   RestRequest,
 } from '@/types/restClient';
 import { Box, Button, Toolbar } from '@mui/material';
-import { useParams, usePathname, useRouter } from 'next/navigation';
-import { ChangeEvent, useState, FocusEvent, useEffect } from 'react';
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
+import {
+  ChangeEvent,
+  useState,
+  FocusEvent,
+  useEffect,
+  useCallback,
+} from 'react';
 import RequestSettings from './RequestSettings';
-import { composeHeaders, composeUrl } from '@/service/urlUtils';
+import {
+  composeUrl,
+  getHeaderPairs,
+  headersFromSearchParams,
+} from '@/service/urlUtils';
 import { useTranslations } from 'next-intl';
 import { useClientStore } from '@/store/clientStore';
 
@@ -24,64 +39,56 @@ function RequestEditor({
   const { slug } = useParams();
   const router = useRouter();
   const path = usePathname();
+  const query = useSearchParams();
   const t = useTranslations('RequestEditor');
 
-  let initMethod = 'GET';
-  let initUrl = '';
-  let initBody = undefined;
+  const initRequest: RestRequest = {
+    method: 'GET',
+    url: '',
+  };
 
   if (slug) {
-    initMethod = slug[0].toUpperCase();
-    initUrl = slug[1] ? atob(decodeURIComponent(slug[1])) : '';
-    initBody = slug[2] ? atob(decodeURIComponent(slug[2])) : undefined;
+    initRequest.method = slug[0].toUpperCase() as HttpMethods;
+    initRequest.url = slug[1] ? atob(decodeURIComponent(slug[1])) : '';
+    initRequest.body = slug[2] ? atob(decodeURIComponent(slug[2])) : undefined;
+    initRequest.headers = headersFromSearchParams(query);
   }
 
-  const [method, setMethod] = useState<string>(initMethod as HttpMethods);
-  const [url, setUrl] = useState<string>(initUrl);
-  const [body, setBody] = useState<string | undefined>(initBody);
+  const [request, setRequest] = useState<RestRequest>(initRequest);
   const headers = useClientStore((store) => store.headers);
+  if (headers.length > 0) {
+    request.headers = getHeaderPairs(headers);
+  }
 
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newSlug = event.target.value;
-    setMethod(newSlug);
+    setRequest({ ...request, method: newSlug as HttpMethods });
   };
 
   const handleUrlBlur = (event: FocusEvent<HTMLInputElement>) => {
-    const url = event.target.value;
-    setUrl(url);
+    const url = event.target.value.trim();
+    setRequest({ ...request, url: url });
   };
 
-  const handleBodyChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const body = event.target.value;
-    setBody(body);
-  };
+  const handleBodyChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const body = event.target.value.trim();
+      setRequest({ ...request, body: body });
+    },
+    [request]
+  );
 
   const handleSend = () => {
-    const headerPairs = headers.reduce(
-      (acc, header) => {
-        acc[header.key] = header.value;
-        return acc;
-      },
-      {} as Record<string, string>
-    );
-
-    const request: RestRequest = {
-      url: url,
-      method: method as HttpMethods,
-      body: body ? btoa(body) : undefined,
-      headers: headerPairs,
+    const payload: RestRequest = {
+      ...request,
+      body: request.body ? btoa(request.body) : undefined,
     };
-    onSend(request);
+    onSend(payload);
   };
 
   useEffect(() => {
-    if (headers) {
-      const headersStr = composeHeaders(headers);
-      router.replace(
-        composeUrl(CLIENT_PAGE, path, method, url, body, headersStr)
-      );
-    }
-  }, [method, url, body, headers, path, router]);
+    router.replace(composeUrl(CLIENT_PAGE, path, request));
+  }, [request, path, router]);
 
   return (
     <Box
@@ -96,7 +103,7 @@ function RequestEditor({
         <UrlBox id="wrapper">
           <UrlInput
             id="method"
-            value={method}
+            value={request.method}
             select
             onChange={handleMethodChange}
             sx={{ width: '98px' }}
@@ -111,9 +118,11 @@ function RequestEditor({
             id="url"
             variant="outlined"
             placeholder={t('urlPlaceholder')}
-            value={url}
+            value={request.url}
             onBlur={handleUrlBlur}
-            onChange={(e) => setUrl(e.currentTarget.value)}
+            onChange={(e) =>
+              setRequest({ ...request, url: e.currentTarget.value })
+            }
             sx={{ flexGrow: 2, border: 0 }}
           ></UrlInput>
         </UrlBox>
@@ -127,7 +136,7 @@ function RequestEditor({
           {t('send')}
         </Button>
       </Toolbar>
-      <RequestSettings body={body} onBodyChange={handleBodyChange} />
+      <RequestSettings body={request.body} onBodyChange={handleBodyChange} />
     </Box>
   );
 }

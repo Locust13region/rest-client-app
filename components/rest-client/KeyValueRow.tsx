@@ -22,7 +22,7 @@ const KeyValueRow = memo(function KeyValueEditor({
         id="keyInput"
         placeholder="header"
         value={rowKey}
-        onChange={(e) => setRowKey(e.target.value)}
+        onChange={(e) => setRowKey(e.target.value.trim())}
         onBlur={() => onChange({ uuid, key: rowKey, value: rowValue })}
       />
       <TextField
@@ -31,7 +31,7 @@ const KeyValueRow = memo(function KeyValueEditor({
         id="valueInput"
         placeholder="value"
         value={rowValue}
-        onChange={(e) => setRowValue(e.target.value)}
+        onChange={(e) => setRowValue(e.target.value.trim())}
         onBlur={() => onChange({ uuid, key: rowKey, value: rowValue })}
       />
     </div>
