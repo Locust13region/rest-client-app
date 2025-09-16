@@ -1,9 +1,8 @@
 'use client';
 import React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
+import { Tab, Box, Tabs } from '@mui/material';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 function NavMenuAuth() {
   const [value, setValue] = React.useState(0);
@@ -29,9 +28,9 @@ function NavMenuAuth() {
         aria-label="Vertical tabs example"
         sx={{ height: '100%' }}
       >
-        <Tab label={t('restClient')} />
-        <Tab label={t('history')} />
-        <Tab label={t('variables')} />
+        <Tab component={Link} href="/client" label={t('restClient')} />
+        <Tab component={Link} href="/history" label={t('history')} />
+        <Tab component={Link} href="/variables" label={t('variables')} />
       </Tabs>
     </Box>
   );

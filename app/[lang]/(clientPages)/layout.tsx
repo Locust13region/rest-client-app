@@ -1,24 +1,14 @@
 import PrivateRoute from '@/components/common/PrivateRoute';
 import { ReactNode } from 'react';
-import { hasLocale } from 'next-intl';
-import { routing } from '@/i18n/routing';
-import { notFound } from 'next/navigation';
-import NavBarAuth from '@/components/main-page/NavBarAuth';
 import { Box } from '@mui/material';
 import NavMenuAuth from '@/components/main-page/NavMenuAuth';
 
 export default async function ClientLayout({
   children,
-  params,
 }: Readonly<{
   children: ReactNode;
   params: Promise<{ lang: string }>;
 }>) {
-  const { lang } = await params;
-  if (!hasLocale(routing.locales, lang)) {
-    notFound();
-  }
-
   return (
     <PrivateRoute>
       <Box
@@ -28,8 +18,6 @@ export default async function ClientLayout({
           flexDirection: 'column',
         }}
       >
-        <NavBarAuth />
-
         <Box
           sx={{
             display: 'flex',
@@ -55,7 +43,6 @@ export default async function ClientLayout({
           </Box>
 
           <Box
-            component="main"
             sx={{
               flexGrow: 1,
               pl: { xs: 0, sm: 2 },
