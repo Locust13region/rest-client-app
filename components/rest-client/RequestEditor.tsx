@@ -8,10 +8,11 @@ import {
 } from '@/types/restClient';
 import { Box, Button, Toolbar } from '@mui/material';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { ChangeEvent, useState, FocusEvent } from 'react';
+import { ChangeEvent, useState, FocusEvent, useEffect } from 'react';
 import RequestSettings from './RequestSettings';
-import { composeUrl } from '@/service/urlUtils';
+import { composeHeaders, composeUrl } from '@/service/urlUtils';
 import { useTranslations } from 'next-intl';
+import { useClientStore } from '@/store/clientStore';
 
 const CLIENT_PAGE = '/client';
 
@@ -38,23 +39,21 @@ function RequestEditor({
   const [method, setMethod] = useState<string>(initMethod as HttpMethods);
   const [url, setUrl] = useState<string>(initUrl);
   const [body, setBody] = useState<string | undefined>(initBody);
+  const headers = useClientStore((store) => store.headers);
 
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newSlug = event.target.value;
     setMethod(newSlug);
-    router.replace(composeUrl(CLIENT_PAGE, path, newSlug, url, body));
   };
 
   const handleUrlBlur = (event: FocusEvent<HTMLInputElement>) => {
     const url = event.target.value;
     setUrl(url);
-    router.replace(composeUrl(CLIENT_PAGE, path, method, url, body));
   };
 
   const handleBodyChange = (event: ChangeEvent<HTMLInputElement>) => {
     const body = event.target.value;
     setBody(body);
-    router.replace(composeUrl(CLIENT_PAGE, path, method, url, body));
   };
 
   const handleSend = () => {
@@ -65,6 +64,15 @@ function RequestEditor({
     };
     onSend(request);
   };
+
+  useEffect(() => {
+    if (headers) {
+      const headersStr = composeHeaders(headers);
+      router.replace(
+        composeUrl(CLIENT_PAGE, path, method, url, body, headersStr)
+      );
+    }
+  }, [method, url, body, headers, path, router]);
 
   return (
     <Box

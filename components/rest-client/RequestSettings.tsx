@@ -7,16 +7,12 @@ import { useClientStore } from '@/store/clientStore';
 import KeyValueEditor from './KeyValueEditor';
 
 interface RequestSettingsProps {
-  //   headers?: Record<string, string>;
   body?: string;
   onBodyChange: (_event: ChangeEvent<HTMLInputElement>) => void;
-  //   onHeadersChange: () => void;
 }
 
 const RequestSettings = memo(function RequestSettings({
-  //headers,
   body,
-  //onHeadersChange,
   onBodyChange,
 }: RequestSettingsProps) {
   const t = useTranslations('RequestEditor');

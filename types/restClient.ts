@@ -29,3 +29,5 @@ export interface KeyValueProps {
   value: string;
   selected?: boolean;
 }
+
+export type KeyValuePair = Pick<KeyValueProps, 'key' | 'value'>;
