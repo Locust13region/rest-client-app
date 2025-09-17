@@ -13,13 +13,7 @@ import {
   useRouter,
   useSearchParams,
 } from 'next/navigation';
-import {
-  ChangeEvent,
-  useState,
-  FocusEvent,
-  useEffect,
-  useCallback,
-} from 'react';
+import { ChangeEvent, useState, FocusEvent, useCallback } from 'react';
 import RequestSettings from './RequestSettings';
 import {
   composeUrl,
@@ -63,6 +57,12 @@ function RequestEditor({
   const handleMethodChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newSlug = event.target.value;
     setRequest({ ...request, method: newSlug as HttpMethods });
+    router.replace(
+      composeUrl(CLIENT_PAGE, path, {
+        ...request,
+        method: newSlug as HttpMethods,
+      })
+    );
   };
 
   const handleUrlBlur = (event: FocusEvent<HTMLInputElement>) => {
@@ -71,8 +71,8 @@ function RequestEditor({
   };
 
   const handleBodyChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const body = event.target.value.trim();
+    (body: string) => {
+      console.log(JSON.stringify(body));
       setRequest({ ...request, body: body });
     },
     [request]
@@ -84,11 +84,8 @@ function RequestEditor({
       body: request.body ? btoa(request.body) : undefined,
     };
     onSend(payload);
-  };
-
-  useEffect(() => {
     router.replace(composeUrl(CLIENT_PAGE, path, request));
-  }, [request, path, router]);
+  };
 
   return (
     <Box
@@ -138,7 +135,10 @@ function RequestEditor({
           {t('send')}
         </Button>
       </Toolbar>
-      <RequestSettings body={request.body} onBodyChange={handleBodyChange} />
+      <RequestSettings
+        initialBody={request.body}
+        onBodyChange={handleBodyChange}
+      />
     </Box>
   );
 }

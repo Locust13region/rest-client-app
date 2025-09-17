@@ -1,24 +1,25 @@
 import { Tab, Tabs, TextField } from '@mui/material';
 import TabPanel from '../common/TabPanel';
-import { ChangeEvent, memo, SyntheticEvent, useState } from 'react';
+import { memo, SyntheticEvent, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { a11yTabProps } from '@/service/tabsUtils';
 import { useClientStore } from '@/store/clientStore';
 import KeyValueEditor from './KeyValueEditor';
 
 interface RequestSettingsProps {
-  body?: string;
-  onBodyChange: (_event: ChangeEvent<HTMLInputElement>) => void;
+  initialBody?: string;
+  onBodyChange: (_value: string) => void;
 }
 
 const RequestSettings = memo(function RequestSettings({
-  body,
+  initialBody,
   onBodyChange,
 }: RequestSettingsProps) {
   const t = useTranslations('RequestEditor');
   const setStoreTab = useClientStore((state) => state.setTab);
   const storeTab = useClientStore((state) => state.currentTab);
   const [currentTab, setCurrentTab] = useState(storeTab);
+  const [body, setBody] = useState(initialBody);
 
   const handleTabChange = (event: SyntheticEvent, value: number) => {
     event.preventDefault();
@@ -43,18 +44,21 @@ const RequestSettings = memo(function RequestSettings({
         <Tab label={t('body')} {...a11yTabProps(1)}></Tab>
         <Tab label={t('codeSnippets')} {...a11yTabProps(2)}></Tab>
       </Tabs>
-      <TabPanel key={0} value={currentTab} index={0} sx={TabPanelSx}>
+      <TabPanel value={currentTab} index={0} sx={TabPanelSx}>
         <KeyValueEditor />
       </TabPanel>
-      <TabPanel key={1} value={currentTab} index={1} sx={TabPanelSx}>
+      <TabPanel value={currentTab} index={1} sx={TabPanelSx}>
         <p>Body Component</p>
         <TextField
           id="body"
           value={body ?? ''}
-          onChange={onBodyChange}
+          onChange={(e) => setBody(e.target.value)}
+          onBlur={() => {
+            onBodyChange(body ?? '');
+          }}
         ></TextField>
       </TabPanel>
-      <TabPanel key={2} value={currentTab} index={2} sx={TabPanelSx}>
+      <TabPanel value={currentTab} index={2} sx={TabPanelSx}>
         <p>Code Component</p>
       </TabPanel>
     </>

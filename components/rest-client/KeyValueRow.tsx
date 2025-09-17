@@ -22,7 +22,6 @@ const KeyValueRow = memo(function KeyValueEditor({
         justifyContent: 'space-evenly',
       }}
     >
-      {/* <TextField type="checkbox" id="isActive" defaultChecked={isActive} /> */}
       <TextField
         key={`${key}-key`}
         type="text"
