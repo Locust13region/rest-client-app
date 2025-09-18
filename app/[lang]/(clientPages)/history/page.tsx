@@ -16,22 +16,12 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { dateFormat } from '@/service/dateFormat';
 import { useTranslations } from 'next-intl';
-
-type HistoryItemType = {
-  uuid: string;
-  endpoint: string;
-  errorDetails: string;
-  requestDuration: number;
-  requestMethod: string;
-  requestSize: number;
-  responseSize: number;
-  responseStatus: number;
-  requestTimestamp: number;
-};
+import { RequestHistory } from '@/types/history';
+import { composeUrl } from '@/service/urlUtils';
 
 function History() {
   const [expanded, setExpanded] = useState<string | false>(false);
-  const [history, setHistory] = useState<HistoryItemType[]>([]);
+  const [history, setHistory] = useState<RequestHistory[]>([]);
   const t = useTranslations('History');
 
   useEffect(() => {
@@ -40,10 +30,10 @@ function History() {
       .then((snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          const normalized: HistoryItemType[] = Object.entries(data).map(
+          const normalized: RequestHistory[] = Object.entries(data).map(
             ([uuid, item]) => ({
               uuid,
-              ...(item as Omit<HistoryItemType, 'uuid'>),
+              ...(item as Omit<RequestHistory, 'uuid'>),
             })
           );
           setHistory(normalized);
@@ -60,7 +50,7 @@ function History() {
     };
 
   return (
-    <Stack paddingRight={4}>
+    <Stack paddingRight={4} maxHeight={'100%'}>
       <Typography component={'h3'} marginBottom={2}>
         {t('title')}
       </Typography>
@@ -78,7 +68,17 @@ function History() {
               aria-controls={`panel${index}bh-content`}
               id={`panel${index}bh-header`}
             >
-              <Link href="/" onClick={(e) => e.stopPropagation()}>
+              <Link
+                href={composeUrl({
+                  url: historyItem.endpoint,
+                  method: historyItem.requestMethod,
+                  body: historyItem.requestBody,
+                  headers:
+                    historyItem.requestHeaders &&
+                    JSON.parse(historyItem.requestHeaders),
+                })}
+                onClick={(e) => e.stopPropagation()}
+              >
                 <ReplayIcon
                   fontSize="small"
                   sx={{ color: 'text.secondary', marginRight: 2 }}
