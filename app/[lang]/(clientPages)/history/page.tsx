@@ -9,170 +9,138 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { SyntheticEvent, useState } from 'react';
-import Link from 'next/link';
 
-//TODO fallback при пустом списке
-//TODO перенос endpoint на узком экране
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { SyntheticEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { dateFormat } from '@/service/dateFormat';
+
+type HistoryItemType = {
+  uuid: string;
+  endpoint: string;
+  errorDetails: string;
+  requestDuration: number;
+  requestMethod: string;
+  requestSize: number;
+  responseSize: number;
+  responseStatus: number;
+  requestTimestamp: number;
+};
 
 function History() {
-  const dbRef = ref(database);
-  get(child(dbRef, `history`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-      } else {
-        console.log('No data available');
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [history, setHistory] = useState<HistoryItemType[]>([]);
+
+  useEffect(() => {
+    const dbRef = ref(database);
+    get(child(dbRef, `history`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const normalized: HistoryItemType[] = Object.entries(data).map(
+            ([uuid, item]) => ({
+              uuid,
+              ...(item as Omit<HistoryItemType, 'uuid'>),
+            })
+          );
+          setHistory(normalized);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleChange =
-    (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
+    (panel: string) => (_event: SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
 
   return (
     <Stack paddingRight={4}>
-      <Typography component={'h2'} marginBottom={2}>
+      <Typography component={'h3'} marginBottom={2}>
         Query history
       </Typography>
-      <Accordion
-        expanded={expanded === 'panel1'}
-        onChange={handleChange('panel1')}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Link href="/" onClick={(e) => e.stopPropagation()}>
-            <Typography
-              component="span"
-              color="retry"
-              sx={{ marginRight: 2, minWidth: '20%', flexShrink: 0 }}
+      {history.length === 0 ? (
+        <Typography color="text.secondary">No history available</Typography>
+      ) : (
+        history.map((historyItem, index) => (
+          <Accordion
+            key={historyItem.uuid}
+            expanded={expanded === `panel${index}`}
+            onChange={handleChange(`panel${index}`)}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${index}bh-content`}
+              id={`panel${index}bh-header`}
             >
-              Retry
-            </Typography>
-          </Link>
-          <Typography
-            component="span"
-            color="get"
-            textTransform="uppercase"
-            flexBasis="20%"
-            maxWidth={150}
-            sx={{ flexShrink: 0 }}
-          >
-            get
-          </Typography>
-          <Typography
-            component="span"
-            sx={{
-              color: 'text.primary',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              maxWidth: '70%',
-            }}
-          >
-            https://https://jsonplaceholder.typicode.com/
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack direction={{ sm: 'column', md: 'row' }} spacing={3}>
-            <Typography sx={{ color: 'text.secondary' }}>
-              `Request Timestamp: ${}`
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              `Request Status Code: ${}`
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              `Request Duration: ${}`
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              `Request Size: ${}`
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              `Response Size: ${}`
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              `Error Details: ${}`
-            </Typography>
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === 'panel2'}
-        onChange={handleChange('panel2')}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2bh-content"
-          id="panel2bh-header"
-        >
-          <Typography component="span" sx={{ width: '33%', flexShrink: 0 }}>
-            Users
-          </Typography>
-          <Typography component="span" sx={{ color: 'text.secondary' }}>
-            You are currently not an owner
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Donec placerat, lectus sed mattis semper, neque lectus feugiat
-            lectus, varius pulvinar diam eros in elit. Pellentesque convallis
-            laoreet laoreet.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === 'panel3'}
-        onChange={handleChange('panel3')}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3bh-content"
-          id="panel3bh-header"
-        >
-          <Typography component="span" sx={{ width: '33%', flexShrink: 0 }}>
-            Advanced settings
-          </Typography>
-          <Typography component="span" sx={{ color: 'text.secondary' }}>
-            Filtering has been entirely disabled for whole web server
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-            sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion
-        expanded={expanded === 'panel4'}
-        onChange={handleChange('panel4')}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel4bh-content"
-          id="panel4bh-header"
-        >
-          <Typography component="span" sx={{ width: '33%', flexShrink: 0 }}>
-            Personal data
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer
-            sit amet egestas eros, vitae egestas augue. Duis vel est augue.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+              <Link href="/" onClick={(e) => e.stopPropagation()}>
+                <ReplayIcon
+                  fontSize="small"
+                  sx={{ color: 'text.secondary', marginRight: 2 }}
+                />
+              </Link>
+              <Typography
+                component="span"
+                color={historyItem.requestMethod.toLowerCase()}
+                textTransform="uppercase"
+                flexBasis="20%"
+                maxWidth={150}
+                sx={{ flexShrink: 0 }}
+              >
+                {historyItem.requestMethod}
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  color: 'text.primary',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '70%',
+                }}
+              >
+                {historyItem.endpoint}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack direction={{ sm: 'column', md: 'row' }} spacing={3}>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {dateFormat(historyItem.requestTimestamp)}
+                </Typography>
+                <Stack direction={'row'} flexWrap={'wrap'}>
+                  <Typography
+                    component="span"
+                    sx={{ color: 'text.secondary', marginRight: 1 }}
+                  >
+                    Status Code:
+                  </Typography>
+                  <Typography
+                    component="span"
+                    color={historyItem.responseStatus < 400 ? 'get' : 'delete'}
+                  >
+                    {historyItem.responseStatus}
+                  </Typography>
+                </Stack>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {`Duration: ${historyItem.requestDuration}`}
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {`Request Size: ${historyItem.requestSize}`}
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {`Response Size: ${historyItem.responseSize}`}
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  {`Error Details: ${historyItem.errorDetails}`}
+                </Typography>
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        ))
+      )}
     </Stack>
   );
 }
