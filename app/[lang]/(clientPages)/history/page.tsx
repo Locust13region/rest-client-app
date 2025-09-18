@@ -15,6 +15,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { dateFormat } from '@/service/dateFormat';
+import { useTranslations } from 'next-intl';
 
 type HistoryItemType = {
   uuid: string;
@@ -31,6 +32,7 @@ type HistoryItemType = {
 function History() {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [history, setHistory] = useState<HistoryItemType[]>([]);
+  const t = useTranslations('History');
 
   useEffect(() => {
     const dbRef = ref(database);
@@ -60,7 +62,7 @@ function History() {
   return (
     <Stack paddingRight={4}>
       <Typography component={'h3'} marginBottom={2}>
-        Query history
+        {t('title')}
       </Typography>
       {history.length === 0 ? (
         <Typography color="text.secondary">No history available</Typography>
@@ -115,7 +117,7 @@ function History() {
                     component="span"
                     sx={{ color: 'text.secondary', marginRight: 1 }}
                   >
-                    Status Code:
+                    {t('status')}
                   </Typography>
                   <Typography
                     component="span"
@@ -125,16 +127,16 @@ function History() {
                   </Typography>
                 </Stack>
                 <Typography sx={{ color: 'text.secondary' }}>
-                  {`Duration: ${historyItem.requestDuration}`}
+                  {t('duration') + historyItem.requestDuration + 'ms'}
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
-                  {`Request Size: ${historyItem.requestSize}`}
+                  {t('requestSize') + historyItem.requestSize + 'B'}
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
-                  {`Response Size: ${historyItem.responseSize}`}
+                  {t('responseSize') + historyItem.responseSize + 'B'}
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
-                  {`Error Details: ${historyItem.errorDetails}`}
+                  {t('errorDetails') + historyItem.errorDetails}
                 </Typography>
               </Stack>
             </AccordionDetails>
