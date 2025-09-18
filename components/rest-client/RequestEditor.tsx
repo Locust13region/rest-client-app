@@ -72,7 +72,6 @@ function RequestEditor({
 
   const handleBodyChange = useCallback(
     (body: string) => {
-      console.log(JSON.stringify(body));
       setRequest({ ...request, body: body });
     },
     [request]
