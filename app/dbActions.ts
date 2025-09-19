@@ -37,32 +37,16 @@ export async function getHistory(userId: string) {
       const data: RequestHistory[] = [];
       if (snapshot.exists()) {
         snapshot.forEach((childSnapshot) => {
-          data.push(childSnapshot.val() as RequestHistory);
+          data.push({
+            ...childSnapshot.val(),
+            uuid: childSnapshot.key,
+          } as RequestHistory);
         });
+        data.sort((a, b) => b.requestTimestamp - a.requestTimestamp);
       }
       return data;
     })
     .catch((error) => {
-      return wrapServerError(error);
+      throw wrapServerError(error);
     });
-}
-
-export async function fetchHistory(userId: string): Promise<RequestHistory[]> {
-  const q = query(
-    ref(database, 'history'),
-    orderByChild('userId'),
-    equalTo(userId)
-  );
-  const snapshot = await get(q);
-
-  if (!snapshot.exists()) return [];
-
-  const data = snapshot.val();
-  return Object.entries(data).map(
-    ([uuid, item]) =>
-      ({
-        uuid,
-        ...(item as Omit<RequestHistory, 'uuid'>),
-      }) as RequestHistory
-  );
 }

@@ -1,7 +1,7 @@
 import { Accordion, Stack, Typography } from '@mui/material';
 import Summary from '@/components/history-accordion/summary';
 import { getTranslations } from 'next-intl/server';
-import { fetchHistory } from '@/app/dbActions';
+import { getHistory } from '@/app/dbActions';
 import { lazy } from 'react';
 import { redirect } from 'next/navigation';
 
@@ -20,7 +20,7 @@ const History = async ({ searchParams }: HistoryProps) => {
   if (!userId) {
     redirect('/');
   }
-  const history = await fetchHistory(userId);
+  const history = await getHistory(userId);
 
   return (
     <Stack paddingRight={4} maxHeight={'100%'} sx={{ overflowY: 'auto' }}>
