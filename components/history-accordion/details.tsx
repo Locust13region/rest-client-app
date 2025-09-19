@@ -1,13 +1,13 @@
 import { dateFormat } from '@/service/dateFormat';
 import { RequestHistory } from '@/types/history';
 import { AccordionDetails, Stack, Typography } from '@mui/material';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { FC } from 'react';
 
 type DetailsProps = { historyItem: RequestHistory };
 
-const Details: FC<DetailsProps> = ({ historyItem }) => {
-  const t = useTranslations('History');
+const Details: FC<DetailsProps> = async ({ historyItem }) => {
+  const t = await getTranslations('History');
   return (
     <AccordionDetails>
       <Stack direction={{ sm: 'column', md: 'row' }} spacing={3}>

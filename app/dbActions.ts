@@ -1,6 +1,14 @@
 'use server';
 import { RestRequest, RestResponse } from '@/types/restClient';
-import { equalTo, get, orderByChild, query, ref, set } from 'firebase/database';
+import {
+  child,
+  equalTo,
+  get,
+  orderByChild,
+  query,
+  ref,
+  set,
+} from 'firebase/database';
 import { database } from '@/firebase/config';
 import { wrapServerError } from '@/service/errorUtils';
 import { RequestHistory } from '@/types/history';
@@ -40,9 +48,25 @@ export async function getHistory(userId: string) {
           data.push(childSnapshot.val() as RequestHistory);
         });
       }
-      return { data };
+      return data;
     })
     .catch((error) => {
       return wrapServerError(error);
     });
+}
+
+export async function fetchHistory(): Promise<RequestHistory[]> {
+  const dbRef = ref(database);
+  const snapshot = await get(child(dbRef, 'history'));
+
+  if (!snapshot.exists()) return [];
+
+  const data = snapshot.val();
+  return Object.entries(data).map(
+    ([uuid, item]) =>
+      ({
+        uuid,
+        ...(item as Omit<RequestHistory, 'uuid'>),
+      }) as RequestHistory
+  );
 }

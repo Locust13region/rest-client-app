@@ -1,46 +1,16 @@
-'use client';
-
-import { database } from '@/firebase/config';
-import { ref, child, get } from 'firebase/database';
 import { Accordion, Stack, Typography } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { RequestHistory } from '@/types/history';
 import Summary from '@/components/history-accordion/summary';
 import Details from '@/components/history-accordion/details';
+import { getTranslations } from 'next-intl/server';
+import { fetchHistory } from '@/app/dbActions';
 
-function History() {
-  const [expanded, setExpanded] = useState<string | false>(false);
-  const [history, setHistory] = useState<RequestHistory[]>([]);
-  const t = useTranslations('History');
+async function History() {
+  const t = await getTranslations('History');
 
-  useEffect(() => {
-    const dbRef = ref(database);
-    get(child(dbRef, `history`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          const normalized: RequestHistory[] = Object.entries(data).map(
-            ([uuid, item]) => ({
-              uuid,
-              ...(item as Omit<RequestHistory, 'uuid'>),
-            })
-          );
-          setHistory(normalized);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  const handleChange =
-    (panel: string) => (_event: SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const history = await fetchHistory();
 
   return (
-    <Stack paddingRight={4} maxHeight={'100%'}>
+    <Stack paddingRight={4} maxHeight={'100%'} sx={{ overflowY: 'auto' }}>
       <Typography component={'h3'} marginBottom={2}>
         {t('title')}
       </Typography>
@@ -49,11 +19,7 @@ function History() {
       ) : (
         history.map((historyItem, index) => {
           return (
-            <Accordion
-              key={historyItem.uuid}
-              expanded={expanded === `panel${index}`}
-              onChange={handleChange(`panel${index}`)}
-            >
+            <Accordion key={historyItem.uuid}>
               <Summary historyItem={historyItem} index={index} />
               <Details historyItem={historyItem} />
             </Accordion>

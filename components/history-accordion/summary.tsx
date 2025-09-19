@@ -19,6 +19,7 @@ const Summary: FC<SummaryProps> = ({ historyItem, index }) => {
     headers:
       historyItem.requestHeaders && JSON.parse(historyItem.requestHeaders),
   });
+
   return (
     <AccordionSummary
       expandIcon={<ExpandMoreIcon />}
