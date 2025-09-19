@@ -2,7 +2,7 @@ import { Accordion, Stack, Typography } from '@mui/material';
 import Summary from '@/components/history-accordion/summary';
 import { getTranslations } from 'next-intl/server';
 import { fetchHistory } from '@/app/dbActions';
-import { FC, lazy } from 'react';
+import { lazy } from 'react';
 import { redirect } from 'next/navigation';
 
 const DetailsLazy = lazy(
@@ -13,12 +13,12 @@ type HistoryProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-const History: FC<HistoryProps> = async ({ searchParams }) => {
+const History = async ({ searchParams }: HistoryProps) => {
   const t = await getTranslations('History');
   const params = await searchParams;
   const userId = params.user as string | undefined;
   if (!userId) {
-    redirect('/main'); ////////////////////////////////надо подумать куда
+    redirect('/');
   }
   const history = await fetchHistory(userId);
 

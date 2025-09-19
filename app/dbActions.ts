@@ -32,7 +32,7 @@ export async function getHistory(userId: string) {
     orderByChild('userId'),
     equalTo(userId)
   );
-  get(q)
+  return get(q)
     .then((snapshot) => {
       const data: RequestHistory[] = [];
       if (snapshot.exists()) {
@@ -54,8 +54,6 @@ export async function fetchHistory(userId: string): Promise<RequestHistory[]> {
     equalTo(userId)
   );
   const snapshot = await get(q);
-  // const dbRef = ref(database);
-  // const snapshot = await get(child(dbRef, 'history'));
 
   if (!snapshot.exists()) return [];
 

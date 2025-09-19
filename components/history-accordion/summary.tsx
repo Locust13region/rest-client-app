@@ -1,16 +1,15 @@
 import { composeUrl } from '@/service/urlUtils';
-import { AccordionSummary, IconButton, Stack, Typography } from '@mui/material';
+import { AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Link from 'next/link';
-import { FC } from 'react';
 import { RequestHistory } from '@/types/history';
+import GetLink from '../common/GetLink';
 
 type SummaryProps = {
   historyItem: RequestHistory;
   index: number;
 };
 
-const Summary: FC<SummaryProps> = ({ historyItem, index }) => {
+const Summary = ({ historyItem, index }: SummaryProps) => {
   const composedHref = composeUrl({
     url: historyItem.endpoint,
     method: historyItem.requestMethod,
@@ -32,35 +31,16 @@ const Summary: FC<SummaryProps> = ({ historyItem, index }) => {
       >
         {historyItem.requestMethod}
       </Typography>
-      <IconButton
-        component={Link}
-        href={composedHref}
-        size="large"
-        disableRipple
-        disableFocusRipple
-        sx={{
-          '&:hover': {
-            textDecorationLine: 'underline',
-          },
-          justifyContent: 'start',
-          flexBasis: '10%',
-          flexGrow: 1,
-          color: 'text.primary',
-          overflow: 'hidden',
-        }}
+      <Typography
+        component="span"
+        flexBasis="10%"
+        flexGrow={1}
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
       >
-        <Typography
-          component="span"
-          sx={{
-            color: 'inherit',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {historyItem.endpoint}
-        </Typography>
-      </IconButton>
+        <GetLink link={composedHref} name={historyItem.endpoint} />
+      </Typography>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`panel${index}bh-content`}
