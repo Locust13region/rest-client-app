@@ -1,7 +1,6 @@
 import { composeUrl } from '@/service/urlUtils';
 import { AccordionSummary, IconButton, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ReplayIcon from '@mui/icons-material/Replay';
 import Link from 'next/link';
 import { FC } from 'react';
 import { RequestHistory } from '@/types/history';
@@ -22,42 +21,52 @@ const Summary: FC<SummaryProps> = ({ historyItem, index }) => {
 
   return (
     <Stack direction="row" alignItems="center">
+      <Typography
+        component="span"
+        color={historyItem.requestMethod.toLowerCase()}
+        textTransform="uppercase"
+        flexBasis="20%"
+        maxWidth={150}
+        padding={2}
+        sx={{ flexShrink: 0 }}
+      >
+        {historyItem.requestMethod}
+      </Typography>
       <IconButton
         component={Link}
         href={composedHref}
         size="large"
-        sx={{ '&:hover': { borderRadius: 1 } }}
+        disableRipple
+        disableFocusRipple
+        sx={{
+          '&:hover': {
+            textDecorationLine: 'underline',
+          },
+          justifyContent: 'start',
+          flexBasis: '10%',
+          flexGrow: 1,
+          color: 'text.primary',
+          overflow: 'hidden',
+        }}
       >
-        <ReplayIcon sx={{ color: 'text.secondary' }} />
+        <Typography
+          component="span"
+          sx={{
+            color: 'inherit',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {historyItem.endpoint}
+        </Typography>
       </IconButton>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`panel${index}bh-content`}
         id={`panel${index}bh-header`}
-      >
-        <Typography
-          component="span"
-          color={historyItem.requestMethod.toLowerCase()}
-          textTransform="uppercase"
-          flexBasis="20%"
-          maxWidth={150}
-          sx={{ flexShrink: 0 }}
-        >
-          {historyItem.requestMethod}
-        </Typography>
-        <Typography
-          component="span"
-          sx={{
-            color: 'text.primary',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            maxWidth: '70%',
-          }}
-        >
-          {historyItem.endpoint}
-        </Typography>
-      </AccordionSummary>
+        sx={{ flexBasis: 4 }}
+      ></AccordionSummary>
     </Stack>
   );
 };

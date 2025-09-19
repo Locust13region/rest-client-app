@@ -1,14 +1,6 @@
 'use server';
 import { RestRequest, RestResponse } from '@/types/restClient';
-import {
-  child,
-  equalTo,
-  get,
-  orderByChild,
-  query,
-  ref,
-  set,
-} from 'firebase/database';
+import { equalTo, get, orderByChild, query, ref, set } from 'firebase/database';
 import { database } from '@/firebase/config';
 import { wrapServerError } from '@/service/errorUtils';
 import { RequestHistory } from '@/types/history';
@@ -55,9 +47,15 @@ export async function getHistory(userId: string) {
     });
 }
 
-export async function fetchHistory(): Promise<RequestHistory[]> {
-  const dbRef = ref(database);
-  const snapshot = await get(child(dbRef, 'history'));
+export async function fetchHistory(userId: string): Promise<RequestHistory[]> {
+  const q = query(
+    ref(database, 'history'),
+    orderByChild('userId'),
+    equalTo(userId)
+  );
+  const snapshot = await get(q);
+  // const dbRef = ref(database);
+  // const snapshot = await get(child(dbRef, 'history'));
 
   if (!snapshot.exists()) return [];
 

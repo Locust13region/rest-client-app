@@ -1,13 +1,26 @@
 import { Accordion, Stack, Typography } from '@mui/material';
 import Summary from '@/components/history-accordion/summary';
-import Details from '@/components/history-accordion/details';
 import { getTranslations } from 'next-intl/server';
 import { fetchHistory } from '@/app/dbActions';
+import { FC, lazy } from 'react';
+import { redirect } from 'next/navigation';
 
-async function History() {
+const DetailsLazy = lazy(
+  () => import('@/components/history-accordion/details')
+);
+
+type HistoryProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+const History: FC<HistoryProps> = async ({ searchParams }) => {
   const t = await getTranslations('History');
-
-  const history = await fetchHistory();
+  const params = await searchParams;
+  const userId = params.user as string | undefined;
+  if (!userId) {
+    redirect('/main'); ////////////////////////////////надо подумать куда
+  }
+  const history = await fetchHistory(userId);
 
   return (
     <Stack paddingRight={4} maxHeight={'100%'} sx={{ overflowY: 'auto' }}>
@@ -21,13 +34,13 @@ async function History() {
           return (
             <Accordion key={historyItem.uuid}>
               <Summary historyItem={historyItem} index={index} />
-              <Details historyItem={historyItem} />
+              <DetailsLazy historyItem={historyItem} />
             </Accordion>
           );
         })
       )}
     </Stack>
   );
-}
+};
 
 export default History;
