@@ -75,11 +75,11 @@ function NavBar() {
   return (
     <AppBar
       component="header"
-      position="fixed"
       sx={{
-        backgroundColor: '#3b3e41ff',
+        position: 'sticky',
         top: 0,
         width: '100%',
+        backgroundColor: '#3b3e41ff',
         zIndex: (theme) => theme.zIndex.appBar,
       }}
     >
@@ -217,7 +217,6 @@ function NavBar() {
               <Button
                 onClick={handleSignOut}
                 sx={{
-                  my: 2,
                   color: 'white',
                   display: 'block',
                   textTransform: 'none',
