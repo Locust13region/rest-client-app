@@ -3,8 +3,11 @@ import React from 'react';
 import { Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/firebase/config';
 
 function NavMenuAuth() {
+  const [user] = useAuthState(auth);
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
@@ -32,7 +35,7 @@ function NavMenuAuth() {
       />
       <Tab
         component={Link}
-        href="/history"
+        href={`/history?user=${user?.uid}`}
         label={t('history')}
         sx={{ whiteSpace: 'nowrap', paddingX: 4 }}
       />
