@@ -51,6 +51,9 @@
   },
   "Response": {
     "resp": "Response",
-    "status": "status"
+    "status": "status",
+    "button": "Format JSON",
+    "bodyComponent": "Body Component",
+    "noResponse": "No response data available."
   }
 }

@@ -120,7 +120,7 @@ function ResponseView({
             fontSize: { xs: '0.8rem', md: '1rem' },
           }}
         >
-          No response data available.
+          {t('noResponse')}
         </Typography>
       </Box>
     );
@@ -145,18 +145,18 @@ function ResponseView({
     return (
       <Container>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <p>Body Component</p>
+          <p>{t('bodyComponent')}</p>
           <Button variant="contained" onClick={handleFormat}>
-            Format JSON
+            {t('button')}
           </Button>
         </Box>
 
         <TextField
           multiline
-          minRows={4}
-          maxRows={4}
+          minRows={3}
+          maxRows={3}
           sx={{
-            width: '72vh',
+            width: '68vh',
             whiteSpace: 'pre-wrap',
             padding: { xs: '8px', md: '10px' },
             height: { xs: '40vh', sm: '30vh', md: '19vh' },
