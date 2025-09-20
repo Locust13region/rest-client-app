@@ -46,6 +46,11 @@
     "restClient": "REST-клиент",
     "history": "История",
     "variables": "Переменные",
-    "signOut": "Выход"
+    "signOut": "Выход",
+    "main": "Домашняя"
+  },
+  "Response": {
+    "resp": "Ответ",
+    "status": "статус"
   }
 }

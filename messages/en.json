@@ -46,6 +46,11 @@
     "restClient": "REST Client",
     "history": "History",
     "variables": "Variables",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "main": "Home"
+  },
+  "Response": {
+    "resp": "Response",
+    "status": "status"
   }
 }

@@ -6,6 +6,7 @@ import { RestRequest, RestResponse } from '@/types/restClient';
 import { useTranslations } from 'next-intl';
 import { lazy, Suspense, useContext, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import ResponseView from '@/components/rest-client/ResponseView';
 
 const RequestEditor = lazy(
   () => import('@/components/rest-client/RequestEditor')
@@ -42,7 +43,8 @@ function RestClient() {
       </Suspense>
 
       <br />
-      <p>{(textResponse as RestResponse).body}</p>
+      {/* <p>{(textResponse as RestResponse).body}</p> */}
+      <ResponseView response={textResponse} />
     </div>
   );
 }

@@ -29,6 +29,7 @@ function NavMenuAuth() {
         aria-label="Vertical tabs example"
         sx={{ height: '100%' }}
       >
+        <Tab component={Link} href="/main" label={t('main')} />
         <Tab component={Link} href="/client" label={t('restClient')} />
         <Tab component={Link} href="/history" label={t('history')} />
         <Tab component={Link} href="/variables" label={t('variables')} />
