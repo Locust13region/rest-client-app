@@ -43,7 +43,7 @@ function RestClient() {
       </Suspense>
 
       <br />
-      {/* <p>{(textResponse as RestResponse).body}</p> */}
+
       <ResponseView response={textResponse} />
     </div>
   );
