@@ -1,4 +1,3 @@
-import { dateFormat } from '@/service/dateFormat';
 import { RequestHistory } from '@/types/history';
 import { AccordionDetails, Stack, Typography } from '@mui/material';
 import { getTranslations } from 'next-intl/server';
@@ -10,9 +9,6 @@ const Details = async ({ historyItem }: DetailsProps) => {
   return (
     <AccordionDetails>
       <Stack direction={{ sm: 'column', md: 'row' }} spacing={3}>
-        <Typography sx={{ color: 'text.secondary' }}>
-          {dateFormat(historyItem.requestTimestamp)}
-        </Typography>
         <Stack direction={'row'} flexWrap={'wrap'}>
           <Typography
             component="span"

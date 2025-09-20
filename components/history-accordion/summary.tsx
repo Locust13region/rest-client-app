@@ -3,6 +3,7 @@ import { AccordionSummary, Stack, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { RequestHistory } from '@/types/history';
 import GetLink from '../common/GetLink';
+import { dateFormat } from '@/service/dateFormat';
 
 type SummaryProps = {
   historyItem: RequestHistory;
@@ -20,12 +21,14 @@ const Summary = ({ historyItem, index }: SummaryProps) => {
 
   return (
     <Stack direction="row" alignItems="center">
+      <Typography padding={2} sx={{ color: 'text.secondary' }}>
+        {dateFormat(historyItem.requestTimestamp)}
+      </Typography>
       <Typography
         component="span"
         color={historyItem.requestMethod.toLowerCase()}
         textTransform="uppercase"
-        flexBasis="20%"
-        maxWidth={150}
+        flexBasis="15%"
         padding={2}
         sx={{ flexShrink: 0 }}
       >
