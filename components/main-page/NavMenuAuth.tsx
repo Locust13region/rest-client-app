@@ -29,32 +29,21 @@ function NavMenuAuth() {
       value={value}
       onChange={handleChange}
       aria-label="Content tabs"
-      sx={{ borderRight: 1, borderColor: 'divider' }}
+      sx={{
+        flexBasis: 200,
+        flexShrink: 0,
+        borderRight: 1,
+        borderColor: 'divider',
+      }}
     >
-      <Tab
-        component={Link}
-        href="/main"
-        label={t('main')}
-        sx={{ whiteSpace: 'nowrap', paddingX: 4 }}
-      />
-      <Tab
-        component={Link}
-        href="/client"
-        label={t('restClient')}
-        sx={{ whiteSpace: 'nowrap', paddingX: 4 }}
-      />
+      <Tab component={Link} href="/main" label={t('main')} />
+      <Tab component={Link} href="/client" label={t('restClient')} />
       <Tab
         component={Link}
         href={`/history?user=${user?.uid}`}
         label={t('history')}
-        sx={{ whiteSpace: 'nowrap', paddingX: 4 }}
       />
-      <Tab
-        component={Link}
-        href="/variables"
-        label={t('variables')}
-        sx={{ whiteSpace: 'nowrap', paddingX: 4 }}
-      />
+      <Tab component={Link} href="/variables" label={t('variables')} />
     </Tabs>
   );
 }

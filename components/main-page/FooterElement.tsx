@@ -42,11 +42,7 @@ function FooterElement() {
         alignItems={'center'}
         gap={1}
       >
-        <Typography
-          variant="body2"
-          color="text.primary"
-          // sx={{ mt: { xs: 1, sm: 0 } }}
-        >
+        <Typography variant="body2" color="text.primary">
           © 2025
         </Typography>
 
