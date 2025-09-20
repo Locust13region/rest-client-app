@@ -14,8 +14,9 @@ export default async function ClientLayout({
       <Stack
         marginTop={4}
         direction={{ xs: 'column', sm: 'row' }}
-        flexGrow={1}
         paddingX={{ xs: 1, sm: 0 }}
+        height="100%"
+        overflow="auto"
       >
         <NavMenuAuth />
         {children}

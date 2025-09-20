@@ -38,13 +38,14 @@ export default async function RootLayout({
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  minHeight: '100vh',
+                  height: '100vh',
                 }}
               >
                 <NavBar />
                 <Stack
                   component="main"
                   flexGrow={1}
+                  overflow="hidden"
                   sx={{
                     '&::before': {
                       content: '""',
