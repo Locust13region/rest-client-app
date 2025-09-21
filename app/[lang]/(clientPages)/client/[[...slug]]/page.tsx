@@ -50,9 +50,7 @@ function RestClient() {
           statusResp={textResponse.status}
           body={textResponse.body}
         />
-      ) : (
-        <ResponseView statusResp={undefined} body={undefined} />
-      )}
+      ) : null}
     </Box>
   );
 }
