@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, vi, beforeEach, expect } from 'vitest';
 import Details from '@/components/history-accordion/details';
-import { RequestHistory } from '@/types/history';
+import { mockHistory } from '@/__tests__/mocks';
 
 vi.mock('next-intl/server', () => ({
   getTranslations: vi.fn(async () => (key: string) => key),
@@ -13,21 +13,6 @@ describe('Details component', () => {
   });
 
   it('renders all fields from history item', async () => {
-    const mockHistory: RequestHistory = {
-      uuid: '1',
-      userId: '123',
-      endpoint: '/api/test',
-      requestMethod: 'GET',
-      requestHeaders: '{}',
-      requestBody: '',
-      requestSize: '100',
-      requestTimestamp: 1758465276478,
-      responseSize: '100',
-      responseStatus: 200,
-      errorDetails: 'Ok',
-      requestDuration: '100',
-    };
-
     render(await Details({ historyItem: mockHistory }));
 
     expect(screen.getByText('status')).toBeInTheDocument();
