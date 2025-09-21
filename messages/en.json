@@ -55,5 +55,14 @@
     "button": "Format JSON",
     "bodyComponent": "Body Component",
     "noResponse": "No response data available."
+  },
+  "History": {
+    "title": "Query history",
+    "emptyHistory": "No history available",
+    "status": "Status Code:",
+    "duration": "Duration: ",
+    "requestSize": "Request Size: ",
+    "responseSize": "Response Size: ",
+    "errorDetails": "Error Details: "
   }
 }

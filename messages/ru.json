@@ -55,5 +55,14 @@
     "button": "Форматировать JSON",
     "bodyComponent": "Компонент body",
     "noResponse": "Нет данных для отображения ответа"
+  },
+  "History": {
+    "title": "История запросов",
+    "emptyHistory": "Нет истории запросов",
+    "status": "Статус код:",
+    "duration": "Продолжительность: ",
+    "requestSize": "Размер запроса: ",
+    "responseSize": "Размер ответа: ",
+    "errorDetails": "Детали ошибок: "
   }
 }

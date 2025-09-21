@@ -3,6 +3,7 @@ import sendRequest from '@/app/actions';
 import { MessageContext } from '@/components/common/MessageContextProvider';
 import { auth } from '@/firebase/config';
 import { RestRequest, RestResponse } from '@/types/restClient';
+import { Box } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import { lazy, Suspense, useContext, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -37,7 +38,7 @@ function RestClient() {
   };
 
   return (
-    <div>
+    <Box width="100%" paddingLeft={4}>
       <Suspense fallback={<p>Loading...</p>}>
         <RequestEditor onSend={handleSend} />
       </Suspense>
@@ -45,7 +46,7 @@ function RestClient() {
       <br />
 
       <ResponseView response={textResponse} />
-    </div>
+    </Box>
   );
 }
 
