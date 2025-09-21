@@ -5,9 +5,10 @@ import { auth } from '@/firebase/config';
 import { RestRequest, RestResponse } from '@/types/restClient';
 import { Box, Stack } from '@mui/material';
 import { useTranslations } from 'next-intl';
-import { lazy, Suspense, useContext, useState } from 'react';
+import { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import ResponseView from '@/components/rest-client/ResponseView';
+import { useClientStore } from '@/store/clientStore';
 
 const RequestEditor = lazy(
   () => import('@/components/rest-client/RequestEditor')
@@ -15,14 +16,21 @@ const RequestEditor = lazy(
 
 function RestClient() {
   const [user] = useAuthState(auth);
-  const [textResponse, setTextResponse] = useState<RestResponse | Error>({});
+  const saveResponse = useClientStore((state) => state.addResponse);
+  const cleanupHeaders = useClientStore((state) => state.cleanupHeaders);
+  const storedResp = useClientStore((state) => state.response);
+  const [textResponse, setTextResponse] = useState<RestResponse | Error>(
+    storedResp as RestResponse
+  );
   const { addSnackMessage } = useContext(MessageContext);
+
   const t = useTranslations('RequestEditor');
 
   const handleSend = async (request: RestRequest) => {
     const result = await sendRequest(request, user?.uid);
     if ((result as { error: Error }).error) {
       setTextResponse({});
+      saveResponse({});
       addSnackMessage({
         text:
           t('sendError') + JSON.stringify((result as { error: Error }).error),
@@ -30,12 +38,20 @@ function RestClient() {
       });
     } else {
       setTextResponse(result as RestResponse);
+      saveResponse(result as RestResponse);
       addSnackMessage({
         text: t('sendSuccess'),
         messageType: 'success',
       });
     }
   };
+
+  useEffect(() => {
+    return () => {
+      saveResponse({});
+      cleanupHeaders();
+    };
+  }, [saveResponse, cleanupHeaders]);
 
   return (
     <Box
