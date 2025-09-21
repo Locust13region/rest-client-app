@@ -50,7 +50,7 @@ const RequestSettings = memo(function RequestSettings({
       </TabPanel>
       <TabPanel value={currentTab} index={1} sx={TabPanelSx}>
         <ResponseView
-          bodyReq={body}
+          body={body}
           bodyChange={onBodyChange}
           setBodyReq={setBody}
         />

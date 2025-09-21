@@ -45,7 +45,14 @@ function RestClient() {
 
       <br />
 
-      <ResponseView response={textResponse} />
+      {!(textResponse instanceof Error) ? (
+        <ResponseView
+          statusResp={textResponse.status}
+          body={textResponse.body}
+        />
+      ) : (
+        <ResponseView statusResp={undefined} body={undefined} />
+      )}
     </Box>
   );
 }
