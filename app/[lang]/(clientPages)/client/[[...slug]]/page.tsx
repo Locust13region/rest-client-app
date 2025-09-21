@@ -3,7 +3,7 @@ import sendRequest from '@/app/actions';
 import { MessageContext } from '@/components/common/MessageContextProvider';
 import { auth } from '@/firebase/config';
 import { RestRequest, RestResponse } from '@/types/restClient';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { useTranslations } from 'next-intl';
 import { lazy, Suspense, useContext, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -51,10 +51,16 @@ function RestClient() {
       <br />
 
       {!(textResponse instanceof Error) ? (
-        <ResponseView
-          statusResp={textResponse.status}
-          body={textResponse.body}
-        />
+        <Stack
+          justifySelf={'flex-start'}
+          paddingX={{ xs: '3%', md: '8%' }}
+          width={'100%'}
+        >
+          <ResponseView
+            statusResp={textResponse.status}
+            body={textResponse.body}
+          />
+        </Stack>
       ) : null}
     </Box>
   );

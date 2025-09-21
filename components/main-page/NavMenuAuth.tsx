@@ -43,7 +43,6 @@ function NavMenuAuth() {
         href={`/history?user=${user?.uid}`}
         label={t('history')}
       />
-      <Tab component={Link} href="/variables" label={t('variables')} />
     </Tabs>
   );
 }

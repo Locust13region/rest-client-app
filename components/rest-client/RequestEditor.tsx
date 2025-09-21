@@ -88,6 +88,7 @@ function RequestEditor({
         maxWidth: { md: 800 },
         borderBottom: 1,
         borderColor: 'divider',
+        paddingTop: 4,
       }}
     >
       <Toolbar>
