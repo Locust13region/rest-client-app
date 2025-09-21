@@ -37,7 +37,12 @@ function RestClient() {
   };
 
   return (
-    <Box width="100%" paddingLeft={4}>
+    <Box
+      width="100%"
+      paddingLeft={4}
+      justifyItems={'center'}
+      sx={{ backgroundColor: '#292929', backgroundClip: 'content-box' }}
+    >
       <Suspense fallback={<p>Loading...</p>}>
         <RequestEditor onSend={handleSend} />
       </Suspense>

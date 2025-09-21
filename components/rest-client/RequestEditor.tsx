@@ -74,13 +74,14 @@ function RequestEditor({
       ...request,
       body: request.body ? btoa(request.body) : undefined,
     };
-    onSend(payload);
     router.replace(composeUrl(request));
+    onSend(payload);
   };
 
   return (
     <Box
       sx={{
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
