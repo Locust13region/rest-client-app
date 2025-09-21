@@ -1,0 +1,66 @@
+{
+  "server-component": {
+    "welcome": "Welcome"
+  },
+  "counter": {
+    "increment": "Increment",
+    "decrement": "Decrement"
+  },
+  "GlobalError": {
+    "title": "Something went wrong",
+    "retry": "Try again"
+  },
+  "RequestEditor": {
+    "send": "Send",
+    "urlPlaceholder": "Enter URL",
+    "headers": "HTTP Headers",
+    "body": "Body",
+    "sendSuccess": "Request completed successfully",
+    "sendError": "Error sending request: "
+  },
+  "Sign": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "or": "or",
+    "alreadyHave": "Already have an account?",
+    "noAccount ": "Don't have an account?",
+    "emailTypeError": "Enter valid email",
+    "passwordLengthError": "Must be at least 8 characters",
+    "passwordLowercaseError": "Add one lowercase",
+    "passwordUppercaseError": "Add one uppercase",
+    "passwordNumberError": "Add one number",
+    "passwordSpecialError": "Add one special character",
+    "signInSuccess": "Successful signin",
+    "signUpSuccess": "Successful signup",
+    "signInError": "Signin Error: ",
+    "signUpError": "Signup Error: "
+  },
+  "Home": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "welcome": "Welcome !",
+    "welcomeBack": "Welcome Back, ",
+    "restClient": "REST Client",
+    "history": "History",
+    "signOut": "Sign Out",
+    "main": "Main"
+  },
+  "Response": {
+    "resp": "Response",
+    "status": "status",
+    "button": "Format JSON",
+    "bodyComponent": "Body Component",
+    "noResponse": "No response data available."
+  },
+  "History": {
+    "title": "Query history",
+    "emptyHistory": "No history available",
+    "status": "Status Code:",
+    "duration": "Duration: ",
+    "requestSize": "Request Size: ",
+    "responseSize": "Response Size: ",
+    "errorDetails": "Error Details: "
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "server-component": {
+    "welcome": "Привет"
+  },
+  "counter": {
+    "increment": "Инкремент",
+    "decrement": "Декремент"
+  },
+  "GlobalError": {
+    "title": "Что-то пошло не так",
+    "retry": "Перезагрузить"
+  },
+  "RequestEditor": {
+    "send": "Выполнить",
+    "urlPlaceholder": "Введите URL",
+    "headers": "HTTP Заголовки",
+    "body": "Тело запроса",
+    "sendSuccess": "Запрос выполнен успешно",
+    "sendError": "Ошибка отправки запроса: "
+  },
+  "Sign": {
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "email": "Почта",
+    "password": "Пароль",
+    "or": "или",
+    "alreadyHave": "Уже есть аккаунт?",
+    "noAccount ": "Еще нет аккаунта?",
+    "emailTypeError": "Неправильный email",
+    "passwordLengthError": "Пароль должен содержать не менее 8 символов",
+    "passwordLowercaseError": "Добавьте хотя бы одну строчную букву",
+    "passwordUppercaseError": "Добавьте хотя бы одну заглавную букву",
+    "passwordNumberError": "Добавьте хотя бы одну цифру",
+    "passwordSpecialError": "Добавьте хотя бы один специальный символ",
+    "signInSuccess": "Успешный вход",
+    "signUpSuccess": "Успешная регистрация",
+    "signInError": "Ошибка входа: ",
+    "signUpError": "Ошибка регистрации: "
+  },
+  "Home": {
+    "signIn": "Вход",
+    "signUp": "Регистрация",
+    "welcome": "Добро пожаловать !",
+    "welcomeBack": "С возвращением, ",
+    "restClient": "REST-клиент",
+    "history": "История",
+    "signOut": "Выход",
+    "main": "Домашняя"
+  },
+  "Response": {
+    "resp": "Ответ",
+    "status": "статус",
+    "button": "Форматировать JSON",
+    "bodyComponent": "Компонент body",
+    "noResponse": "Нет данных для отображения ответа"
+  },
+  "History": {
+    "title": "История запросов",
+    "emptyHistory": "Нет истории запросов",
+    "status": "Статус код:",
+    "duration": "Продолжительность: ",
+    "requestSize": "Размер запроса: ",
+    "responseSize": "Размер ответа: ",
+    "errorDetails": "Детали ошибок: "
+  }
+}
